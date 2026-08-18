@@ -51,7 +51,9 @@ class NavigationApiTest extends AbstractApiTest {
   @Test void disabledModuleRemovesItsNavigationContribution() throws Exception {
     jdbc.update("update platform.module set status='DISABLED' where module_key='approval-domain'");
     try {
-      assertThat(itemKeys(navigation(adminToken()), "business")).containsExactly("core.home");
+      assertThat(itemKeys(navigation(adminToken()), "business"))
+          .contains("core.home", "module.revenue-intelligence.analytics", "module.revenue-intelligence.dashboard")
+          .doesNotContain("module.approval-domain.demo-group", "module.approval-domain.approvals");
     } finally {
       jdbc.update("update platform.module set status='HEALTHY' where module_key='approval-domain'");
     }

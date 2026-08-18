@@ -13,11 +13,11 @@ class ControlPlaneTest extends AbstractApiTest {
 
   @Test
   void bootstrapReturnsDeploymentStateForAdmin() throws Exception {
+    var registeredModules = jdbc.queryForObject("select count(*) from platform.module", Integer.class);
     mvc.perform(get("/api/v1/control-plane/bootstrap").with(bearer(adminToken())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.summary").exists())
-        // 8 module seed demo + kernel, control-plane, approval-domain do ModuleRegistry
-        .andExpect(jsonPath("$.summary.modules").value(11))
+        .andExpect(jsonPath("$.summary.modules").value(registeredModules))
         .andExpect(jsonPath("$.modules").isArray())
         .andExpect(jsonPath("$.audit").isArray())
         .andExpect(jsonPath("$.settings").isMap());

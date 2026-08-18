@@ -24,7 +24,7 @@ class ModuleBoundaryTest {
   @BeforeAll static void importProductionCode() {
     productionClasses = new ClassFileImporter()
         .withImportOption(new ImportOption.DoNotIncludeTests())
-        .importPackages("vn.coreplatform");
+        .importPackages("vn.coreplatform", "vn.sgodata");
   }
 
   static List<ArchRule> forbiddenPairs() {
@@ -55,6 +55,14 @@ class ModuleBoundaryTest {
     noClasses().that().resideInAPackage("..shared..")
         .should().dependOnClassesThat().resideInAnyPackage(
             "..identity..", "..permission..", "..dynamicresource..", "..filemanagement..", "..controlplane..", "..audit..", "..eventing..", "..demo..", "..kernel..")
+        .check(productionClasses);
+  }
+
+  @Test void projectModulesUseOnlyPublishedCoreContracts() {
+    noClasses().that().resideInAPackage("vn.sgodata..")
+        .should().dependOnClassesThat().resideInAnyPackage(
+            "..identity..", "..dynamicresource..", "..filemanagement..", "..controlplane..", "..demo..", "..jobs..", "..webhook..")
+        .because("module dự án chỉ được dùng các hợp đồng Core công khai: kernel, shared, permission, audit và eventing")
         .check(productionClasses);
   }
 

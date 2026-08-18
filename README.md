@@ -9,7 +9,7 @@ Revenue Intelligence là dự án nghiệp vụ độc lập dùng để đo lư
 - Commit: `199411e`
 - Chính sách đồng bộ: chỉ nhận thay đổi Core qua pull request có kiểm tra tương thích, migration và hồi quy; không ghi nghiệp vụ dự án ngược về Core.
 
-Tài liệu nghiệp vụ nằm tại `docs/01-business-analysis-v1.0.md`, kế hoạch khám phá dữ liệu tại `docs/02-data-discovery-plan-v1.0.md` và quy tắc tính toán tại `docs/03-business-rules-v1.0.md`.
+Tài liệu nghiệp vụ nằm tại `docs/01-business-analysis-v1.0.md`, kế hoạch khám phá dữ liệu tại `docs/02-data-discovery-plan-v1.0.md`, quy tắc tính toán tại `docs/03-business-rules-v1.0.md`, hợp đồng dữ liệu/API tại `docs/04-data-and-integration-contracts-v1.0.md` và biên bản hoàn thành tại `docs/05-implementation-status-v1.0.md`.
 
 ## Platform foundation
 
@@ -35,6 +35,8 @@ docker compose up --build
 ```
 
 Ba service sẽ chạy: PostgreSQL 17 (`:5432`), backend (`:8080`), Control Plane UI (`:3000`).
+
+Sau khi đăng nhập, mở **Nghiệp vụ → Marketing & Doanh thu**. Có thể nạp lần lượt bốn file trong `samples/input/`: customers, orders, ad-spend và touchpoints; sau đó chạy lại attribution để xem dashboard và đối soát.
 
 Database dùng hai credential (E2): `core_admin` cho migration/DDL (`DB_MIGRATION_USER`) và `core_app` cho runtime (`DB_USER`, chỉ DML + chịu RLS theo tenant). Thay đổi roles/seed xong cần `docker compose down -v` để tạo lại volume.
 
