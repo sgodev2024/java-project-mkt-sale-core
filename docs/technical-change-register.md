@@ -79,16 +79,42 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `5ad2ec5786997b52775c22fc879ca2a2a110539d` (2026-08-18). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `f059f43fd4f46bb3f673fcb4437ebc87cc405f85` (2026-08-18). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-18 | [`f059f43`](https://github.com/sgodev2024/java-core/commit/f059f43fd4f46bb3f673fcb4437ebc87cc405f85) | Document browser origin release gate | sgodev2024 | 2 |
+| 2026-08-18 | [`68bf081`](https://github.com/sgodev2024/java-core/commit/68bf0813f0c31b711449f779440df02b6b80262e) | Fix project domain CORS handling | sgodev2024 | 8 |
 | 2026-08-18 | [`5ad2ec5`](https://github.com/sgodev2024/java-core/commit/5ad2ec5786997b52775c22fc879ca2a2a110539d) | Document and verify test deployment | sgodev2024 | 5 |
 | 2026-08-18 | [`2f5aa74`](https://github.com/sgodev2024/java-core/commit/2f5aa74349d2c2e520e461fa4e9a0cd5bc6bf305) | Prepare isolated CRM marketing sales deployment | sgodev2024 | 7 |
 | 2026-08-18 | [`b17d86e`](https://github.com/sgodev2024/java-core/commit/b17d86e0d99fcfbc69ecf05ac4e0ab208dde8a93) | Build Revenue Intelligence MVP | sgodev2024 | 22 |
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-18 — Document browser origin release gate
+
+- Commit: [`f059f43fd4f46bb3f673fcb4437ebc87cc405f85`](https://github.com/sgodev2024/java-core/commit/f059f43fd4f46bb3f673fcb4437ebc87cc405f85)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `docs/00-core-to-project-implementation-standard-v1.0.md`
+- `M` `docs/06-deployment-runbook-test-v1.0.md`
+
+### 2026-08-18 — Fix project domain CORS handling
+
+- Commit: [`68bf0813f0c31b711449f779440df02b6b80262e`](https://github.com/sgodev2024/java-core/commit/68bf0813f0c31b711449f779440df02b6b80262e)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `backend/src/main/java/vn/coreplatform/security/SecurityConfig.java`
+- `M` `backend/src/main/resources/application.yml`
+- `A` `backend/src/test/java/vn/coreplatform/security/CorsSecurityTest.java`
+- `M` `deploy/project/.env.example`
+- `M` `deploy/project/docker-compose.yml`
+- `M` `deploy/project/smoke-test.sh`
+- `M` `docs/06-deployment-runbook-test-v1.0.md`
+- `M` `frontend/app/page.tsx`
 
 ### 2026-08-18 — Document and verify test deployment
 
