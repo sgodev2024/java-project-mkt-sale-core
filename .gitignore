@@ -1,0 +1,36 @@
+# Operating system and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Java
+backend/target/
+*.class
+*.log
+hs_err_pid*
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/site-package.tgz
+frontend/.codex-dev.*.log
+
+# Runtime secrets
+.env
+*.env
+!.env.example
+!**/.env.example
+*.pem
+*.key
+
+# Local data and backups
+data/
+backups/
+*.dump
+*.sql.gz
+
+# Independent customer/business project repositories
+/revenue-intelligence/

@@ -1,0 +1,8 @@
+# S0 governance: mọi thay đổi cần ít nhất một reviewer theo vai trò.
+# Tạm thời Technical Lead giữ toàn bộ; tách owner theo module khi đội đủ người.
+* @sgodev2024
+
+# Vùng security/data critical — bắt buộc reviewer đúng vai trò khi có người phụ trách
+/backend/src/main/java/vn/coreplatform/security/  @sgodev2024
+/backend/src/main/java/vn/coreplatform/identity/  @sgodev2024
+/backend/src/main/resources/db/migration/         @sgodev2024

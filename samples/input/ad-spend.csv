@@ -1,0 +1,4 @@
+source_system,spend_date,channel,campaign_external_id,campaign_name,currency,amount,impressions,clicks
+META,2026-05-01,PAID_SOCIAL,META-CAMP-01,Synthetic Meta Campaign,VND,300000,15000,450
+GOOGLE,2026-05-15,PAID_SEARCH,GOOGLE-CAMP-01,Synthetic Search Campaign,VND,250000,7000,310
+META,2026-06-01,PAID_SOCIAL,META-CAMP-01,Synthetic Meta Campaign,VND,350000,16000,430

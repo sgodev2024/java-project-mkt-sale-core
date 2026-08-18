@@ -1,0 +1,5 @@
+source_system,external_customer_id,display_name,phone,email,history_complete
+CRM,CUST-001,Khach hang Synthetic 01,0900000001,synthetic01@example.invalid,true
+CRM,CUST-002,Khach hang Synthetic 02,0900000002,synthetic02@example.invalid,true
+POS,CUST-003,Khach hang Synthetic 03,0900000003,,false
+WHOLESALE,B2B-001,Cong ty Synthetic A,,buyer@synthetic-a.example.invalid,true

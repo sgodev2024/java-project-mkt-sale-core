@@ -1,0 +1,9 @@
+moduleKey: "__MODULE_KEY__"
+name: "__MODULE_NAME__"
+version: "0.1.0"
+requiresCore: ">=1.1.0 <2.0.0"
+owner: "UNASSIGNED"
+dataOwner: "UNASSIGNED"
+migrationNamespace: "V__MIGRATION_VERSION__*"
+capabilities: []
+

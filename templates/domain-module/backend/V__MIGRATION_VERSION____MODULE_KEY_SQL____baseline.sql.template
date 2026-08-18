@@ -1,0 +1,6 @@
+create schema if not exists __MODULE_KEY_SQL__;
+
+-- TODO: tạo bảng code-first aggregate; mọi bảng tenant-owned bắt buộc tenant_id NOT NULL.
+-- TODO: ENABLE + FORCE ROW LEVEL SECURITY, policy dùng platform.current_tenant_id().
+-- TODO: grant DML cho core_app và không grant DDL/ownership.
+

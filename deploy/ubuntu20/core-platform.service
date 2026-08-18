@@ -1,0 +1,26 @@
+[Unit]
+Description=Java Core Platform Runtime
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=coreplatform
+Group=coreplatform
+WorkingDirectory=/opt/core-platform/current/backend
+EnvironmentFile=/etc/core-platform/core-platform.env
+ExecStart=/usr/bin/java -XX:MaxRAMPercentage=75 -Djava.security.egd=file:/dev/urandom -jar /opt/core-platform/current/backend/target/core-platform-runtime-1.0.0-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/core-platform /var/lib/core-platform
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

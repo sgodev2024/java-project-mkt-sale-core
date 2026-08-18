@@ -1,0 +1,36 @@
+name: technical-change-log
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - docs/technical-change-register.md
+
+permissions:
+  contents: write
+
+concurrency:
+  group: technical-change-log-main
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Regenerate technical change register
+        run: node scripts/update-technical-change-log.mjs
+      - name: Commit generated register when changed
+        shell: bash
+        run: |
+          if git diff --quiet -- docs/technical-change-register.md; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/technical-change-register.md
+          git commit -m "docs: update technical change register [skip ci]"
+          git push

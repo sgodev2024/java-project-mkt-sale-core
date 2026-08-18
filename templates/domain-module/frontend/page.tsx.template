@@ -1,0 +1,15 @@
+"use client";
+
+export default function ModuleHomePage() {
+  return (
+    <main className="page-stack">
+      <header className="page-heading">
+        <div><p className="eyebrow">Nghiệp vụ</p><h1>__MODULE_NAME__</h1></div>
+      </header>
+      <section className="content-card">
+        <p>Module đã được khởi tạo. Thay nội dung này bằng UI nối API thật.</p>
+      </section>
+    </main>
+  );
+}
+

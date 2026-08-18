@@ -1,0 +1,27 @@
+package __BASE_PACKAGE__;
+
+import java.util.List;
+import org.springframework.stereotype.Component;
+import vn.coreplatform.kernel.ModuleContributor;
+import vn.coreplatform.kernel.ModuleDescriptor;
+import vn.coreplatform.kernel.NavigationItemDescriptor;
+
+@Component
+public class DomainModule implements ModuleContributor {
+  @Override public ModuleDescriptor descriptor() {
+    return new ModuleDescriptor(
+        "__MODULE_KEY__", "__MODULE_NAME__", "0.1.0",
+        List.of("permission", "audit-store", "event-outbox"),
+        List.of("__MODULE_KEY__-domain"),
+        "Code-first domain module",
+        ">=1.1.0 <2.0.0");
+  }
+
+  @Override public List<NavigationItemDescriptor> navigationItems() {
+    return List.of(new NavigationItemDescriptor(
+        "module.__MODULE_KEY__.home", "business", "", "__MODULE_NAME__", "navigation.__MODULE_KEY__",
+        "chart", "__MODULE_KEY__", "/business/__MODULE_KEY__", 30,
+        "", "__PERMISSION_RESOURCE__", "READ", List.of("__MODULE_NAME__")));
+  }
+}
+

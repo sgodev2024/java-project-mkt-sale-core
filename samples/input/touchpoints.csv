@@ -1,0 +1,5 @@
+source_system,external_touchpoint_id,external_customer_id,anonymous_id,occurred_at,channel,campaign_external_id,utm_source,utm_medium,utm_campaign,click_id
+WEB,TP-001,CUST-001,anon-001,2026-04-25T11:00:00+07:00,PAID_SOCIAL,META-CAMP-01,facebook,cpc,synthetic-meta,fbclid-synthetic-001
+WEB,TP-002,CUST-001,anon-001,2026-06-10T10:00:00+07:00,DIRECT,,,,,
+WEB,TP-003,CUST-002,anon-002,2026-05-14T17:00:00+07:00,PAID_SEARCH,GOOGLE-CAMP-01,google,cpc,synthetic-search,gclid-synthetic-001
+CRM,TP-004,B2B-001,,2026-05-20T09:00:00+07:00,REFERRAL,,,partner-a,,

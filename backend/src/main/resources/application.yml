@@ -1,0 +1,48 @@
+spring:
+  application.name: core-platform-runtime
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/core_platform}
+    username: ${DB_USER:core_app}
+    password: ${DB_PASSWORD:core_app_dev}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:20}
+      connection-timeout: 3000
+  flyway:
+    enabled: false
+  jackson:
+    default-property-inclusion: non_null
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  error.include-message: never
+management:
+  endpoints.web.exposure.include: health,info,metrics,prometheus
+  endpoint.health.probes.enabled: true
+  health.readinessstate.enabled: true
+  health.livenessstate.enabled: true
+springdoc.swagger-ui.path: /swagger-ui
+core:
+  bootstrap-admin-password: ${CORE_BOOTSTRAP_ADMIN_PASSWORD:}
+  bootstrap-mfa-code: ${CORE_BOOTSTRAP_MFA_CODE:}
+  mfa.enabled: ${CORE_MFA_ENABLED:true}
+  mfa.allow-bootstrap: ${CORE_MFA_ALLOW_BOOTSTRAP:false}
+  mfa.require-admin: ${CORE_MFA_REQUIRE_ADMIN:true}
+  file-storage-root: ${FILE_STORAGE_ROOT:/data/files}
+  migration.enabled: ${CORE_MIGRATION_ENABLED:true}
+  migration.user: ${DB_MIGRATION_USER:}
+  migration.password: ${DB_MIGRATION_PASSWORD:}
+  outbox.enabled: ${CORE_OUTBOX_ENABLED:false}
+  outbox.batch-size: ${CORE_OUTBOX_BATCH_SIZE:20}
+  outbox.max-attempts: ${CORE_OUTBOX_MAX_ATTEMPTS:5}
+  outbox.poll-interval-ms: ${CORE_OUTBOX_POLL_MS:5000}
+  outbox.initial-delay-ms: ${CORE_OUTBOX_INITIAL_DELAY_MS:3000}
+  jobs.enabled: ${CORE_JOBS_ENABLED:false}
+  jobs.scheduler-enabled: ${CORE_JOBS_SCHEDULER_ENABLED:false}
+  jobs.batch-size: ${CORE_JOBS_BATCH_SIZE:10}
+  jobs.max-attempts: ${CORE_JOBS_MAX_ATTEMPTS:5}
+  jobs.worker-lease-seconds: ${CORE_JOBS_LEASE_SECONDS:30}
+  jobs.leader-lease-seconds: ${CORE_JOBS_LEADER_LEASE_SECONDS:15}
+  jobs.poll-interval-ms: ${CORE_JOBS_POLL_MS:5000}
+  jobs.initial-delay-ms: ${CORE_JOBS_INITIAL_DELAY_MS:4000}
+  jobs.scheduler-poll-ms: ${CORE_JOBS_SCHEDULER_POLL_MS:5000}
+  jobs.scheduler-initial-delay-ms: ${CORE_JOBS_SCHEDULER_INITIAL_DELAY_MS:5000}

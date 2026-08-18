@@ -1,0 +1,25 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { AppIcon } from "../components/app-icon";
+
+type ApprovalItem = { id:string; title:string; description:string; status:string; priority:string; amount?:number; version:number; updatedAt:string };
+
+export default function DemoApprovalWorkspace({ apiUrl }: { apiUrl: string }) {
+  const [items,setItems]=useState<ApprovalItem[]>([]);const [status,setStatus]=useState("");const [query,setQuery]=useState("");
+  const [title,setTitle]=useState("");const [priority,setPriority]=useState("MEDIUM");const [message,setMessage]=useState("");const [loading,setLoading]=useState(false);
+  const authHeaders=()=>({Authorization:`Bearer ${window.localStorage.getItem("core-access-token")||window.sessionStorage.getItem("core-access-token")||""}`});
+  const load=async()=>{setLoading(true);try{const params=new URLSearchParams();if(status)params.set("status",status);if(query)params.set("q",query);const r=await fetch(`${apiUrl}/api/v1/approvals?${params}`,{headers:authHeaders()});if(!r.ok)throw new Error((await r.json().catch(()=>({}))).detail||"Không thể tải đề nghị");setItems(await r.json());setMessage("");}catch(e){setMessage(e instanceof Error?e.message:"Không thể tải dữ liệu");}finally{setLoading(false);}};
+  // Query text chỉ chạy khi nhấn Enter; thay đổi trạng thái mới tự tải lại.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(()=>{void load();},[status]);
+  const create=async()=>{if(!title.trim())return setMessage("Vui lòng nhập tiêu đề đề nghị.");const r=await fetch(`${apiUrl}/api/v1/approvals`,{method:"POST",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({title:title.trim(),description:"",priority})});if(!r.ok)return setMessage((await r.json().catch(()=>({}))).detail||"Không thể tạo đề nghị");setTitle("");setMessage("Đã tạo đề nghị mới.");await load();};
+  const transition=async(item:ApprovalItem,action:"submit"|"approve"|"reject"|"cancel")=>{const note=action==="approve"||action==="reject"?window.prompt("Nhập nội dung quyết định")||"":"";if((action==="approve"||action==="reject")&&!note)return;const r=await fetch(`${apiUrl}/api/v1/approvals/${item.id}/${action}`,{method:"POST",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify(action==="approve"||action==="reject"?{note}:{})});if(!r.ok)return setMessage((await r.json().catch(()=>({}))).detail||"Thao tác thất bại");setMessage("Đã cập nhật trạng thái đề nghị.");await load();};
+  return <>
+    <div className="page-heading"><div><p className="eyebrow">Demo module</p><h1>Đề nghị phê duyệt</h1><p className="page-description">Nghiệp vụ mẫu code-first với state machine, permission, audit và transactional outbox.</p></div></div>
+    <section className="panel approval-create"><div><h2>Tạo đề nghị</h2><p>Dữ liệu được kiểm tra theo domain invariant trước khi ghi.</p></div><input aria-label="Tiêu đề đề nghị" value={title} onChange={e=>setTitle(e.target.value)} placeholder="Ví dụ: Phê duyệt mua thiết bị" /><select value={priority} onChange={e=>setPriority(e.target.value)} aria-label="Mức ưu tiên"><option value="LOW">Thấp</option><option value="MEDIUM">Trung bình</option><option value="HIGH">Cao</option><option value="URGENT">Khẩn cấp</option></select><button className="primary-button" onClick={create}>＋ Tạo đề nghị</button></section>
+    <div className="filter-row"><div className="search-field"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>e.key==="Enter"&&load()} placeholder="Tìm đề nghị..." /></div>{["","DRAFT","SUBMITTED","APPROVED","REJECTED"].map(value=><button key={value||"all"} className={`filter-chip ${status===value?"active":""}`} onClick={()=>setStatus(value)}>{value||"Tất cả"}</button>)}</div>
+    {message&&<p className="operation-message">{message}</p>}
+    <section className="panel approval-table"><div className="approval-row approval-head"><span>Đề nghị</span><span>Ưu tiên</span><span>Trạng thái</span><span>Cập nhật</span><span>Thao tác</span></div>{loading?<div className="empty-workspace"><p>Đang tải...</p></div>:items.map(item=><div className="approval-row" key={item.id}><span><strong>{item.title}</strong><small>v{item.version} · {item.id.slice(0,8)}</small></span><span><em className={`priority ${item.priority.toLowerCase()}`}>{item.priority}</em></span><span><em className={`state ${item.status.toLowerCase()}`}>{item.status}</em></span><time>{new Date(item.updatedAt).toLocaleString("vi-VN")}</time><span className="approval-actions">{item.status==="DRAFT"&&<button onClick={()=>transition(item,"submit")}>Gửi duyệt</button>}{item.status==="SUBMITTED"&&<><button onClick={()=>transition(item,"approve")}>Duyệt</button><button onClick={()=>transition(item,"reject")}>Từ chối</button></>}</span></div>)}{!loading&&items.length===0&&<div className="empty-workspace"><span><AppIcon name="clipboard-check" size={24}/></span><h2>Chưa có đề nghị</h2><p>Tạo đề nghị đầu tiên trong biểu mẫu phía trên.</p></div>}</section>
+  </>;
+}
