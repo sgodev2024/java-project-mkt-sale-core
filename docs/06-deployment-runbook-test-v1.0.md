@@ -6,7 +6,8 @@
 - Trạng thái: Đã triển khai và smoke test; chưa phải production khách hàng
 - Repository: `git@github.com:sgodev2024/java-project-mkt-sale-core.git`
 - Core baseline: `core-v1.1.0-project-baseline` (`199411e`)
-- Release test: `v0.1.1-test`
+- Release test: `v0.1.2-test`
+- Runtime commit: `0d8cace1bbf3`
 
 ## 1. Điểm triển khai
 
@@ -147,3 +148,4 @@ File storage nằm trong volume `crm-mkt-sale_project_files`; backup database kh
 - Nguyên nhân: container backend chưa nhận CORS allowlist cho domain dự án; smoke test cũ không gửi header `Origin` nên không phát hiện.
 - Khắc phục: cấu hình `CORE_CORS_ALLOWED_ORIGIN_PATTERNS` theo môi trường, thêm kiểm thử CORS backend, thêm `Origin` vào smoke test và fallback khi frontend nhận phản hồi không phải JSON.
 - Phòng ngừa: domain, reverse proxy và browser-origin smoke test là release gate bắt buộc cho mọi dự án mới.
+- Xác minh sau triển khai: đăng nhập thật, Navigation Registry và dashboard đều thành công; preflight từ domain dự án trả `200`, origin ngoài allowlist trả `403`; ba container đều healthy.
