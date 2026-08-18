@@ -79,15 +79,28 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `2f5aa74349d2c2e520e461fa4e9a0cd5bc6bf305` (2026-08-18). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `5ad2ec5786997b52775c22fc879ca2a2a110539d` (2026-08-18). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-18 | [`5ad2ec5`](https://github.com/sgodev2024/java-core/commit/5ad2ec5786997b52775c22fc879ca2a2a110539d) | Document and verify test deployment | sgodev2024 | 5 |
 | 2026-08-18 | [`2f5aa74`](https://github.com/sgodev2024/java-core/commit/2f5aa74349d2c2e520e461fa4e9a0cd5bc6bf305) | Prepare isolated CRM marketing sales deployment | sgodev2024 | 7 |
 | 2026-08-18 | [`b17d86e`](https://github.com/sgodev2024/java-core/commit/b17d86e0d99fcfbc69ecf05ac4e0ab208dde8a93) | Build Revenue Intelligence MVP | sgodev2024 | 22 |
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-18 — Document and verify test deployment
+
+- Commit: [`5ad2ec5786997b52775c22fc879ca2a2a110539d`](https://github.com/sgodev2024/java-core/commit/5ad2ec5786997b52775c22fc879ca2a2a110539d)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `.gitignore`
+- `M` `README.md`
+- `A` `deploy/project/smoke-test.sh`
+- `M` `docs/05-implementation-status-v1.0.md`
+- `A` `docs/06-deployment-runbook-test-v1.0.md`
 
 ### 2026-08-18 — Prepare isolated CRM marketing sales deployment
 
