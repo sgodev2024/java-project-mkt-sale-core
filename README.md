@@ -9,7 +9,7 @@ Revenue Intelligence là dự án nghiệp vụ độc lập dùng để đo lư
 - Commit: `199411e`
 - Chính sách đồng bộ: chỉ nhận thay đổi Core qua pull request có kiểm tra tương thích, migration và hồi quy; không ghi nghiệp vụ dự án ngược về Core.
 
-Tài liệu nghiệp vụ nằm tại `docs/01-business-analysis-v1.0.md`, kế hoạch khám phá dữ liệu tại `docs/02-data-discovery-plan-v1.0.md`, quy tắc tính toán tại `docs/03-business-rules-v1.0.md`, hợp đồng dữ liệu/API tại `docs/04-data-and-integration-contracts-v1.0.md` và biên bản hoàn thành tại `docs/05-implementation-status-v1.0.md`.
+Tài liệu nghiệp vụ nằm tại `docs/01-business-analysis-v1.0.md`, kế hoạch khám phá dữ liệu tại `docs/02-data-discovery-plan-v1.0.md`, quy tắc tính toán tại `docs/03-business-rules-v1.0.md`, hợp đồng dữ liệu/API tại `docs/04-data-and-integration-contracts-v1.0.md`, biên bản hoàn thành tại `docs/05-implementation-status-v1.0.md` và runbook môi trường test tại `docs/06-deployment-runbook-test-v1.0.md`.
 
 Tiêu chuẩn bắt buộc để tạo, phát triển, nâng Core và bàn giao các dự án tiếp theo nằm tại `docs/00-core-to-project-implementation-standard-v1.0.md`. Stack triển khai độc lập của dự án nằm tại `deploy/project/`.
 
@@ -69,6 +69,16 @@ cd frontend && npm test
 ```
 
 CI chạy cả hai trên mọi pull request (`.github/workflows/`).
+
+## Test deployment
+
+- URL: `https://crm-mkt-sale.sgodata.com`
+- Server path: `/home/ubuntu/crm-mkt-sale-java-core`
+- Triển khai: `./deploy/project/deploy.sh`
+- Smoke test không nạp lại dữ liệu: `./deploy/project/smoke-test.sh`
+- Nạp bộ dữ liệu tổng hợp lần đầu: `SEED_DEMO=true ./deploy/project/smoke-test.sh`
+
+Secret chỉ nằm trong `.env` quyền `0600`; không được commit hoặc ghi vào tài liệu.
 
 Frontend:
 

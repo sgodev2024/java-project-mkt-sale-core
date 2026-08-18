@@ -1,6 +1,6 @@
 # Revenue Intelligence — Implementation Status v1.0
 
-- Trạng thái: **MVP kỹ thuật đã hoàn thành và kiểm thử; chưa triển khai production**
+- Trạng thái: **MVP kỹ thuật đã triển khai trên môi trường test; chưa phê duyệt production khách hàng**
 - Ngày chốt: 2026-08-18
 - Core baseline: `core-v1.1.0-project-baseline` (`199411e`)
 - Project baseline commit: `0fc5048`
@@ -14,7 +14,7 @@
 | 3 | Quy tắc nghiệp vụ | Chốt net revenue, NEW/RETURNING, WHOLESALE/RETAIL, first-touch, last-non-direct và confidence | Hoàn thành |
 | 4 | Template dự án/module | Dùng Core contract `ModuleContributor`, `DomainResourceAdapter`, Navigation Registry và package riêng `vn.sgodata` | Hoàn thành |
 | 5 | Khóa Core baseline | Core được hồi quy, gắn tag `core-v1.1.0-project-baseline` và lưu commit nguồn | Hoàn thành |
-| 6 | Git dự án độc lập | Tạo repository Git cục bộ `revenue-intelligence`, giữ toàn bộ source để bàn giao; `upstream` trỏ về Core | Hoàn thành cục bộ; chờ GitHub repository để cấu hình `origin` |
+| 6 | Git dự án độc lập | `origin` là `sgodev2024/java-project-mkt-sale-core`; `upstream` trỏ về Core; repository giữ full source bàn giao | Hoàn thành |
 | 7 | Data model và integration contract | Có migration V20, RLS tenant, chỉ mục, import contract, API contract, audit/outbox | Hoàn thành |
 | 8 | Import/reconciliation | Import CSV customers/orders/ad-spend/touchpoints, checksum idempotency, lỗi theo dòng, đối soát doanh thu | Hoàn thành MVP |
 | 9 | Customer identity/lifecycle | Ghép định danh theo source ID/hash email/hash phone, che PII, tính NEW/RETURNING theo lịch sử đơn | Hoàn thành MVP |
@@ -55,8 +55,10 @@ Không được coi MVP hiện tại là dữ liệu production cho tới khi ho
 2. Chốt định nghĩa doanh thu với kế toán: thuế, phí vận chuyển, hủy, hoàn tiền một phần và thời điểm ghi nhận.
 3. Chốt customer matching khi email/điện thoại thiếu, dùng chung hoặc sai định dạng.
 4. Đánh giá chất lượng lịch sử để công bố tỷ lệ khách mua lại và confidence.
-5. Cấp GitHub repository độc lập để thêm `origin`, push và bật CI/branch protection.
-6. Cấp domain, database, secret và môi trường riêng cho dự án; chạy backup/restore và smoke test trước release.
+5. Thay bootstrap password khi bàn giao và quyết định bật lại MFA cho production chính thức.
+6. Thiết lập lịch backup đáp ứng RPO 15 phút, chạy restore drill chứng minh RTO 1 giờ và cấu hình cảnh báo.
+7. Chuyển Cloudflare Flexible sang Full (Strict) sau khi cấp origin certificate mà không ảnh hưởng các domain khác.
+8. Bật branch protection/ruleset bắt buộc review và CI trên GitHub.
 
 Các API connector trực tiếp (Meta/Google/TikTok/POS/CRM) và mô hình attribution nâng cao chưa thuộc MVP này; CSV là integration boundary đầu tiên đã được kiểm soát.
 
@@ -73,7 +75,12 @@ Tính năng Marketing & Revenue Intelligence chỉ phát triển trong repositor
 
 ## 6. Trạng thái triển khai máy chủ
 
-- Production Core hiện hữu: **không thay đổi** trong đợt này.
-- Revenue Intelligence: chỉ dùng container/database tạm để test; chưa cài vào production.
-- Chỉ triển khai dự án khi các gate ở mục 4 được duyệt và có repository/môi trường đích độc lập.
+- Production Core hiện hữu: **không thay đổi**, vẫn chạy tại commit `7d1bb98`.
+- Revenue Intelligence đã triển khai độc lập tại `/home/ubuntu/crm-mkt-sale-java-core`.
+- URL test: `https://crm-mkt-sale.sgodata.com`; frontend và `/api/*` dùng cùng origin.
+- Ba service PostgreSQL, Java backend và Next.js frontend đều healthy; backend readiness trả `UP` qua origin và Cloudflare.
+- Flyway đã áp dụng 20/20 migration trên database sạch.
+- Smoke test thật đã đạt: đăng nhập, Navigation Registry, 4 batch/16 dòng import không lỗi, 5 đơn hàng, 10 kết quả attribution và dashboard API.
+- MFA tạm tắt theo quyết định môi trường test; approval demo không bật trong profile production.
 
+Chi tiết vận hành, kiểm tra, backup/restore và failure recovery nằm trong `docs/06-deployment-runbook-test-v1.0.md`.

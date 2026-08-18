@@ -29,6 +29,7 @@ frontend/.codex-dev.*.log
 # Local data and backups
 data/
 backups/
+.deployed-version
 *.dump
 *.sql.gz
 
