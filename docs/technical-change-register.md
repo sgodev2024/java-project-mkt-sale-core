@@ -79,10 +79,11 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `f059f43fd4f46bb3f673fcb4437ebc87cc405f85` (2026-08-18). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `196f3281995281639f2e782094411a3ab812f693` (2026-08-18). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-18 | [`196f328`](https://github.com/sgodev2024/java-core/commit/196f3281995281639f2e782094411a3ab812f693) | Record CORS hotfix deployment | sgodev2024 | 1 |
 | 2026-08-18 | [`f059f43`](https://github.com/sgodev2024/java-core/commit/f059f43fd4f46bb3f673fcb4437ebc87cc405f85) | Document browser origin release gate | sgodev2024 | 2 |
 | 2026-08-18 | [`68bf081`](https://github.com/sgodev2024/java-core/commit/68bf0813f0c31b711449f779440df02b6b80262e) | Fix project domain CORS handling | sgodev2024 | 8 |
 | 2026-08-18 | [`5ad2ec5`](https://github.com/sgodev2024/java-core/commit/5ad2ec5786997b52775c22fc879ca2a2a110539d) | Document and verify test deployment | sgodev2024 | 5 |
@@ -91,6 +92,14 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-18 — Record CORS hotfix deployment
+
+- Commit: [`196f3281995281639f2e782094411a3ab812f693`](https://github.com/sgodev2024/java-core/commit/196f3281995281639f2e782094411a3ab812f693)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `docs/06-deployment-runbook-test-v1.0.md`
 
 ### 2026-08-18 — Document browser origin release gate
 
