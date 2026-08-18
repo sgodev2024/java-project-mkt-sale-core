@@ -108,7 +108,7 @@ function LoginScreen({ onAuthenticated }: { onAuthenticated: (session: SessionDa
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/v1/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password, remember }) });
-      const body = await response.json();
+      const body = await response.json().catch(() => ({ detail: response.statusText || "Backend trả phản hồi không hợp lệ." }));
       if (!response.ok) throw new Error(body.detail ?? "Không thể đăng nhập.");
       if (body.mfaRequired === false && body.session?.accessToken) {
         onAuthenticated(body.session as SessionData, remember);
@@ -128,7 +128,7 @@ function LoginScreen({ onAuthenticated }: { onAuthenticated: (session: SessionDa
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/v1/auth/mfa`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ challengeId, code: otp, remember }) });
-      const body = await response.json();
+      const body = await response.json().catch(() => ({ detail: response.statusText || "Backend trả phản hồi không hợp lệ." }));
       if (!response.ok) throw new Error(body.detail ?? "Mã xác thực không hợp lệ.");
       onAuthenticated(body as SessionData, remember);
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Không thể xác thực."); }

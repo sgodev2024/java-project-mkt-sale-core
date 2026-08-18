@@ -44,6 +44,7 @@ services:
       CORE_MFA_ENABLED: "false"
       CORE_MFA_REQUIRE_ADMIN: "false"
       CORE_MFA_ALLOW_BOOTSTRAP: "false"
+      CORE_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORE_CORS_ALLOWED_ORIGIN_PATTERNS:-https://crm-mkt-sale.sgodata.com}
       CORE_OUTBOX_ENABLED: "true"
       CORE_JOBS_ENABLED: "true"
       CORE_JOBS_SCHEDULER_ENABLED: "true"
@@ -96,4 +97,3 @@ volumes:
 networks:
   project-internal:
     driver: bridge
-

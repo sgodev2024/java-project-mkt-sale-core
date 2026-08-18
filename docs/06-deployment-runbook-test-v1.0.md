@@ -69,7 +69,7 @@ docker compose --env-file .env -f deploy/project/docker-compose.yml logs --since
 
 ## 5. Smoke test
 
-Smoke test đăng nhập bằng bootstrap administrator lấy từ `.env`, không in password/token, xác minh Navigation Registry và dashboard, sau đó logout:
+Smoke test đăng nhập bằng bootstrap administrator lấy từ `.env`, gửi `Origin` giống trình duyệt để kiểm tra CORS, không in password/token, xác minh Navigation Registry và dashboard, sau đó logout:
 
 ```bash
 cd /home/ubuntu/crm-mkt-sale-java-core

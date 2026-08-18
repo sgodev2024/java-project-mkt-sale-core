@@ -18,6 +18,7 @@ spring:
 server:
   port: ${PORT:8080}
   shutdown: graceful
+  forward-headers-strategy: framework
   error.include-message: never
 management:
   endpoints.web.exposure.include: health,info,metrics,prometheus
@@ -26,6 +27,7 @@ management:
   health.livenessstate.enabled: true
 springdoc.swagger-ui.path: /swagger-ui
 core:
+  cors.allowed-origin-patterns: ${CORE_CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:*,http://127.0.0.1:*,https://*.chatgpt.site,https://corejava.sgodata.com}
   bootstrap-admin-password: ${CORE_BOOTSTRAP_ADMIN_PASSWORD:}
   bootstrap-mfa-code: ${CORE_BOOTSTRAP_MFA_CODE:}
   mfa.enabled: ${CORE_MFA_ENABLED:true}
