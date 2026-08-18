@@ -93,6 +93,7 @@ Không chạy chế độ seed với dữ liệu khách hàng thật và không 
 | Backend readiness | `UP` qua loopback, Nginx và Cloudflare |
 | Frontend | HTTP 200 qua Nginx và Cloudflare |
 | Authentication | `admin@core.local`, MFA tạm tắt, session thật |
+| Browser CORS | `https://crm-mkt-sale.sgodata.com` được cho phép; origin ngoài allowlist bị từ chối |
 | Navigation Registry | API thành công |
 | Import tổng hợp | 4 batch, 16 accepted, 0 rejected |
 | Orders | 5 đơn, net revenue tổng hợp 14.180.000 VND |
@@ -137,3 +138,12 @@ File storage nằm trong volume `crm-mkt-sale_project_files`; backup database kh
 - MFA chỉ tạm tắt cho test. Production khách hàng cần quyết định security riêng và test enrollment/recovery.
 - Log Spring Boot hiện có cảnh báo generated development password của auto-configuration; custom token security vẫn bảo vệ API, nhưng nên loại bỏ auto-configuration không dùng ở bản hardening tiếp theo.
 - Cần branch protection, dependency/security scan, monitoring, alert, backup/restore drill và dữ liệu thật được BA/kế toán xác nhận trước production.
+
+## 10. Nhật ký sự cố triển khai
+
+### 2026-08-18 — Login trả `Invalid CORS request`
+
+- Hiện tượng: frontend cố parse phản hồi text 403 thành JSON và hiển thị `Unexpected token 'I'`.
+- Nguyên nhân: container backend chưa nhận CORS allowlist cho domain dự án; smoke test cũ không gửi header `Origin` nên không phát hiện.
+- Khắc phục: cấu hình `CORE_CORS_ALLOWED_ORIGIN_PATTERNS` theo môi trường, thêm kiểm thử CORS backend, thêm `Origin` vào smoke test và fallback khi frontend nhận phản hồi không phải JSON.
+- Phòng ngừa: domain, reverse proxy và browser-origin smoke test là release gate bắt buộc cho mọi dự án mới.

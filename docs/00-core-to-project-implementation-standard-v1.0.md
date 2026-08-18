@@ -96,6 +96,8 @@ Mỗi module nghiệp vụ tối thiểu phải cung cấp:
 
 - Dùng Next.js chuẩn; production build phải là standalone image.
 - Ưu tiên frontend/API cùng origin: domain dự án phục vụ UI, `/api/*` reverse proxy về backend.
+- Mọi domain trình duyệt phải nằm trong CORS allowlist cấu hình theo môi trường; không hard-code domain dự án vào Java Core.
+- Smoke test đăng nhập phải gửi header `Origin` giống trình duyệt và xác minh cả origin hợp lệ lẫn origin không được tin cậy.
 - Không hard-code domain Core, credential, menu hay quyền trong source.
 - Giao diện chỉ render tính năng do Navigation Registry và capability/permission cho phép.
 - Mỗi module có loading, empty, error, retry và responsive states.
@@ -177,4 +179,3 @@ README.md
 ```
 
 Tài liệu thay đổi cùng pull request với code. Deployment report cập nhật sau mỗi lần triển khai; không ghi password/token vào tài liệu.
-
