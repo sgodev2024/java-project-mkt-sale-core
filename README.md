@@ -11,6 +11,8 @@ Revenue Intelligence là dự án nghiệp vụ độc lập dùng để đo lư
 
 Tài liệu nghiệp vụ nằm tại `docs/01-business-analysis-v1.0.md`, kế hoạch khám phá dữ liệu tại `docs/02-data-discovery-plan-v1.0.md`, quy tắc tính toán tại `docs/03-business-rules-v1.0.md`, hợp đồng dữ liệu/API tại `docs/04-data-and-integration-contracts-v1.0.md` và biên bản hoàn thành tại `docs/05-implementation-status-v1.0.md`.
 
+Tiêu chuẩn bắt buộc để tạo, phát triển, nâng Core và bàn giao các dự án tiếp theo nằm tại `docs/00-core-to-project-implementation-standard-v1.0.md`. Stack triển khai độc lập của dự án nằm tại `deploy/project/`.
+
 ## Platform foundation
 
 Java Core Platform is a business-neutral modular application foundation for building independent customer solutions. The repository contains the approved architecture documents, a Java 21/Spring Boot runtime slice, PostgreSQL migrations, the Control Plane frontend and Ubuntu deployment assets.

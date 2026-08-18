@@ -1,0 +1,99 @@
+name: crm-mkt-sale
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${DB_MIGRATION_USER:?DB_MIGRATION_USER is required}
+      POSTGRES_PASSWORD: ${DB_MIGRATION_PASSWORD:?DB_MIGRATION_PASSWORD is required}
+      CORE_APP_DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - project_pgdata:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging: *default-logging
+    networks: [project-internal]
+
+  backend:
+    image: crm-mkt-sale-backend:${APP_VERSION:-local}
+    build: ../../backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      PORT: 8080
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: core_app
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+      DB_MIGRATION_USER: ${DB_MIGRATION_USER}
+      DB_MIGRATION_PASSWORD: ${DB_MIGRATION_PASSWORD}
+      FILE_STORAGE_ROOT: /data/files
+      CORE_BOOTSTRAP_ADMIN_PASSWORD: ${CORE_BOOTSTRAP_ADMIN_PASSWORD:?CORE_BOOTSTRAP_ADMIN_PASSWORD is required}
+      CORE_MFA_ENABLED: "false"
+      CORE_MFA_REQUIRE_ADMIN: "false"
+      CORE_MFA_ALLOW_BOOTSTRAP: "false"
+      CORE_OUTBOX_ENABLED: "true"
+      CORE_JOBS_ENABLED: "true"
+      CORE_JOBS_SCHEDULER_ENABLED: "true"
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Ho_Chi_Minh -XX:MaxRAMPercentage=75
+    ports:
+      - "127.0.0.1:${BACKEND_HOST_PORT:-18180}:8080"
+    volumes:
+      - project_files:/data/files
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 18
+    logging: *default-logging
+    networks: [project-internal]
+
+  frontend:
+    image: crm-mkt-sale-frontend:${APP_VERSION:-local}
+    build:
+      context: ../../frontend
+      args:
+        NEXT_PUBLIC_CORE_API_URL: ${PUBLIC_API_URL:-}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+    ports:
+      - "127.0.0.1:${FRONTEND_HOST_PORT:-18181}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 12
+    logging: *default-logging
+    networks: [project-internal]
+
+volumes:
+  project_pgdata:
+  project_files:
+
+networks:
+  project-internal:
+    driver: bridge
+
