@@ -47,9 +47,20 @@ assert body.get("email") == "admin@core.local"
 print("Authentication: OK (admin@core.local, MFA disabled)")
 '
 
-curl --fail --silent --show-error -H "$ORIGIN_HEADER" -H "$AUTH_HEADER" \
-  "$BASE_URL/api/v1/navigation/me" >/dev/null
-echo "Navigation registry API: OK"
+NAVIGATION_RESPONSE=$(curl --fail --silent --show-error -H "$ORIGIN_HEADER" -H "$AUTH_HEADER" \
+  "$BASE_URL/api/v1/navigation/me")
+printf '%s' "$NAVIGATION_RESPONSE" | python3 -c '
+import json, sys
+body = json.load(sys.stdin)
+sections = body.get("sections", [])
+section_keys = [section.get("key") for section in sections]
+assert section_keys == ["home", "business", "system-administration"], section_keys
+items = {section.get("key"): [item.get("key") for item in section.get("items", [])] for section in sections}
+assert items.get("home") == ["core.home"], items.get("home")
+assert "core.home" not in items.get("business", []), items.get("business")
+assert all(key.startswith("module.") for key in items.get("business", [])), items.get("business")
+print("Navigation hierarchy: OK (Home, Business modules, System administration)")
+'
 
 if [[ "$SEED_DEMO" == "true" ]]; then
   for dataset in customers orders ad-spend touchpoints; do

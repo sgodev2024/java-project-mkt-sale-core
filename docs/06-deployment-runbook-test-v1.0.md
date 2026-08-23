@@ -6,8 +6,8 @@
 - Trạng thái: Đã triển khai và smoke test; chưa phải production khách hàng
 - Repository: `git@github.com:sgodev2024/java-project-mkt-sale-core.git`
 - Core baseline: `core-v1.1.0-project-baseline` (`199411e`)
-- Release test: `v0.1.2-test`
-- Runtime commit: `0d8cace1bbf3`
+- Release test: `v0.1.3-test`
+- Runtime commit: `64265314df02`
 
 ## 1. Điểm triển khai
 
@@ -70,7 +70,7 @@ docker compose --env-file .env -f deploy/project/docker-compose.yml logs --since
 
 ## 5. Smoke test
 
-Smoke test đăng nhập bằng bootstrap administrator lấy từ `.env`, gửi `Origin` giống trình duyệt để kiểm tra CORS, không in password/token, xác minh Navigation Registry và dashboard, sau đó logout:
+Smoke test đăng nhập bằng bootstrap administrator lấy từ `.env`, gửi `Origin` giống trình duyệt để kiểm tra CORS, không in password/token, xác minh Navigation Registry, thứ bậc menu `Trang chủ` / `Nghiệp vụ` / `Quản trị hệ thống` và dashboard, sau đó logout:
 
 ```bash
 cd /home/ubuntu/crm-mkt-sale-java-core
@@ -101,6 +101,21 @@ Không chạy chế độ seed với dữ liệu khách hàng thật và không 
 | Attribution | 5 đơn được xử lý, 10 kết quả |
 | Dashboard | API thật thành công |
 | Production Core | không thay đổi; commit `7d1bb98` tiếp tục chạy |
+
+### 6.1. Kết quả phát hành điều hướng ngày 2026-08-23
+
+| Gate | Kết quả |
+|---|---|
+| Release | `v0.1.3-test`; runtime `64265314df02` |
+| Cấu trúc cấp cao | `Trang chủ`, `Nghiệp vụ`, `Quản trị hệ thống` theo đúng thứ tự |
+| Trang chủ | `core.home` thuộc section adapter `home`, không nằm trong `business` |
+| Nghiệp vụ | Chỉ nhận group/page có key `module.*` từ module nghiệp vụ đang hoạt động và được cấp quyền |
+| Quản trị hệ thống | Giữ các chức năng quản trị Core trong section riêng |
+| Backend regression | 9/9 test Navigation Registry/API đạt với PostgreSQL 17 |
+| Frontend quality | Next.js production build đạt; 6/6 test đạt; lint không có lỗi |
+| Runtime smoke test | Đăng nhập, Navigation Registry, Revenue Dashboard và logout đều đạt |
+| Container health | PostgreSQL, backend và frontend đều `healthy` |
+| Production Core | Không triển khai lại; môi trường Production Core không thay đổi |
 
 Tại thời điểm kiểm tra, phân vùng `/` sử dụng 85%, còn khoảng 12 GB. Phải đặt cảnh báo dung lượng và kiểm tra trước mỗi build/release; không tự động xóa volume hoặc image chưa xác minh.
 
