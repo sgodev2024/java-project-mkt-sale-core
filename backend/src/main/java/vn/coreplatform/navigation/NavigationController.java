@@ -131,7 +131,8 @@ public class NavigationController {
           .filter(item -> visibleKeys.contains(item.descriptor().key()))
           .map(this::view)
           .toList();
-      if (!itemViews.isEmpty()) {
+      // Business là vùng mở rộng chuẩn và vẫn phải hiện khi chưa có module được cấp quyền.
+      if (!itemViews.isEmpty() || "business".equals(section.descriptor().key())) {
         var descriptor = section.descriptor();
         sectionViews.add(new SectionView(descriptor.key(), descriptor.label(), descriptor.labelKey(), descriptor.icon(),
             descriptor.sortOrder(), itemViews));

@@ -14,10 +14,11 @@ import vn.coreplatform.AbstractApiTest;
 class NavigationApiTest extends AbstractApiTest {
   @Test void platformAdminReceivesUnifiedBusinessAndAdministrationSections() throws Exception {
     var body = navigation(adminToken());
-    assertThat(keys(body.path("sections"))).containsExactly("business", "system-administration");
+    assertThat(keys(body.path("sections"))).containsExactly("home", "business", "system-administration");
+    assertThat(itemKeys(body, "home")).containsExactly("core.home");
     assertThat(itemKeys(body, "system-administration")).contains("core.modules", "core.resources", "core.users",
         "core.organizations", "core.access", "core.activity", "core.files", "core.settings");
-    assertThat(itemKeys(body, "business")).contains("core.home", "module.approval-domain.demo-group",
+    assertThat(itemKeys(body, "business")).contains("module.approval-domain.demo-group",
         "module.approval-domain.approvals");
     assertThat(body.has("workspaces")).isFalse();
   }
@@ -27,8 +28,9 @@ class NavigationApiTest extends AbstractApiTest {
     seedDefaultTenantAccount(email, "ApplicationPass@2026");
     var token = login(email, "ApplicationPass@2026");
     var before = navigation(token);
-    assertThat(keys(before.path("sections"))).containsExactly("business");
-    assertThat(itemKeys(before, "business")).containsExactly("core.home");
+    assertThat(keys(before.path("sections"))).containsExactly("home", "business");
+    assertThat(itemKeys(before, "home")).containsExactly("core.home");
+    assertThat(itemKeys(before, "business")).isEmpty();
 
     var tenantId = jdbc.queryForObject("select id from platform.tenant where tenant_key='default'", UUID.class);
     var policyId = UUID.randomUUID();
@@ -39,7 +41,7 @@ class NavigationApiTest extends AbstractApiTest {
     jdbc.update("update identity.permission_revision set revision=revision+1 where tenant_id=?", tenantId);
     try {
       var after = navigation(token);
-      assertThat(itemKeys(after, "business")).contains("core.home", "module.approval-domain.demo-group",
+      assertThat(itemKeys(after, "business")).contains("module.approval-domain.demo-group",
           "module.approval-domain.approvals");
     } finally {
       jdbc.update("delete from identity.role_policy where tenant_id=? and policy_id=?", tenantId, policyId);
@@ -52,7 +54,7 @@ class NavigationApiTest extends AbstractApiTest {
     jdbc.update("update platform.module set status='DISABLED' where module_key='approval-domain'");
     try {
       assertThat(itemKeys(navigation(adminToken()), "business"))
-          .contains("core.home", "module.revenue-intelligence.analytics", "module.revenue-intelligence.dashboard")
+          .contains("module.revenue-intelligence.analytics", "module.revenue-intelligence.dashboard")
           .doesNotContain("module.approval-domain.demo-group", "module.approval-domain.approvals");
     } finally {
       jdbc.update("update platform.module set status='HEALTHY' where module_key='approval-domain'");

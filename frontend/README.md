@@ -46,6 +46,8 @@ Image cuối chạy non-root bằng `node server.js`, lắng nghe cổng `3000` 
 
 Frontend gọi `GET /api/v1/navigation/me` sau khi đăng nhập. Sidebar, section, favorites, recent items và Command Palette đều dựng từ `sections[]` đã được backend lọc quyền; không có Workspace switcher và không thêm menu module cố định trong UI shell.
 
+`Trang chủ` được render thành page cấp cao độc lập, cùng cấp với section `Nghiệp vụ` và `Quản trị hệ thống`. Section `Nghiệp vụ` chỉ chứa group/page do module nghiệp vụ đóng góp; khi không có module khả dụng, section vẫn hiện với empty state thay vì lồng Trang chủ bên trong.
+
 Route chuẩn gồm `/home`, `/business/...` và `/administration/...`. Route không xuất hiện trong manifest hiệu lực được thay thế bằng page hợp lệ đầu tiên. Menu tác vụ cá nhân phải do module nghiệp vụ đăng ký với visibility mode `ASSIGNMENT`; application shell không hard-code menu này và quyền System Administrator không tự làm nó xuất hiện.
 
 View mẫu Approval Domain được tách tại `app/demo/approval-workspace.tsx` và lazy-load. Production backend không phát view `approvals`, vì vậy chunk demo không được mở và direct route `/business/approvals` quay về page hợp lệ trong manifest.

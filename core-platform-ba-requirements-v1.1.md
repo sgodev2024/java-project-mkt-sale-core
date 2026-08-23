@@ -549,7 +549,7 @@ Phiên bản 1.1 làm rõ sản phẩm ở giai đoạn hiện tại là hệ th
 
 Tài khoản có quyền cao nhất được hiển thị bằng thuật ngữ **Quản trị viên hệ thống (System Administrator)**. Mã vai trò legacy `PLATFORM_ADMIN` được giữ trong backend để tương thích dữ liệu và API hiện tại; frontend không dùng tên này làm nhãn nghiệp vụ.
 
-### 24.2 Mười lăm quyết định frontend đã phê duyệt
+### 24.2 Mười sáu quyết định frontend đã phê duyệt
 
 | ID | Quyết định baseline | Hệ quả bắt buộc |
 |---|---|---|
@@ -568,22 +568,23 @@ Tài khoản có quyền cao nhất được hiển thị bằng thuật ngữ *
 | FE-BA-13 | Menu tác vụ cá nhân hiển thị theo capability tham gia xử lý nhiệm vụ được giao | Core không đăng ký sẵn `Công việc của tôi`. Module có hộp việc thật mới được đăng ký item `ASSIGNMENT`; item này luôn qua Permission Decision Point bằng policy đúng resource/action, kể cả System Administrator. Quyền wildcard quản trị không làm phát sinh menu tác vụ cá nhân. |
 | FE-BA-14 | Nghiệp vụ tách khỏi Production Core và tập trung trong section Nghiệp vụ | Section `business` là vùng mở rộng chuẩn, tương đương vai trò phân khu của `system-administration`. Module mẫu `approval-domain` chỉ được nạp ở profile `demo`/`test`, nằm trong group `Nghiệp vụ mẫu`; Production không đăng ký menu, API hoặc metadata của module này. |
 | FE-BA-15 | Giao diện ESG tối giản và mọi trạng thái vận hành phải có nguồn dữ liệu thật | Frontend dùng Next.js App Router chính thức, bảng màu xanh bền vững/trung tính, SVG icon theo ngữ nghĩa module; nút/số liệu không có API hoặc telemetry phải được nối thật, loại bỏ hoặc ghi vào gap backlog. Production không giữ dữ liệu seed minh họa. |
+| FE-BA-16 | Trang chủ là điểm điều hướng cấp cao độc lập | `Trang chủ`, `Nghiệp vụ` và `Quản trị hệ thống` cùng nằm ở cấp cao nhất. `Trang chủ` không thuộc section `business`; bên trong `Nghiệp vụ` chỉ chứa group/page do các module nghiệp vụ đang hoạt động và được cấp quyền đóng góp. |
 
 ### 24.3 Kiến trúc thông tin được phê duyệt
 
 Sidebar được dựng theo thứ tự:
 
 1. Yêu thích của người dùng, nếu có.
-2. Một hoặc nhiều section nghiệp vụ do Core/module đăng ký.
-3. Group và Page thuộc từng section.
+2. **Trang chủ** là page cấp cao độc lập.
+3. Section **Nghiệp vụ** chứa group/page của các module nghiệp vụ.
 4. Section **Quản trị hệ thống** ở cuối, chỉ dành cho tài khoản được cấp quyền.
 
 Cấu trúc tham chiếu:
 
 ```text
 Ứng dụng
+├── Trang chủ
 ├── Nghiệp vụ
-│   ├── Trang chủ
 │   ├── Nghiệp vụ mẫu [chỉ demo/test]
 │   │   └── Đề nghị phê duyệt
 │   └── [Group/Page do module nghiệp vụ đăng ký]
@@ -639,6 +640,17 @@ Menu chỉ là cơ chế khám phá. Việc không hiển thị menu không thay
 | FE-BR-014-05 | Frontend demo được tách thành lazy chunk và chỉ render khi backend trả view `approvals` trong manifest hiệu lực. Direct URL không được tự kích hoạt module mẫu. |
 | FE-BR-014-06 | Module nghiệp vụ thật của khách hàng có lifecycle, permission, migration và ownership riêng; không kế thừa namespace hoặc dữ liệu của module demo. |
 
+### 24.4.3 Phân cấp Trang chủ và section module
+
+| ID | Quy tắc đã duyệt |
+|---|---|
+| FE-BR-016-01 | `core.home` thuộc adapter section kỹ thuật `home`, có route `/home` và được frontend render thành một page cấp cao; không hiển thị một nhãn section `home` bao quanh page. |
+| FE-BR-016-02 | Thứ tự cấp cao cố định là `Trang chủ` (10), `Nghiệp vụ` (20), `Quản trị hệ thống` (90); section quản trị chỉ xuất hiện theo quyền. |
+| FE-BR-016-03 | Không module nào được đăng ký item vào `home`; registry phải fail startup nếu `core.home` nằm trong `business` hoặc nếu `home` chứa item khác. |
+| FE-BR-016-04 | `business` là vùng chứa module nghiệp vụ, không chứa page Core Trang chủ; module tự đóng góp group/page và backend loại item không hoạt động hoặc không được cấp quyền. |
+| FE-BR-016-05 | `Nghiệp vụ` vẫn hiển thị khi chưa có module được cấp quyền và trình bày empty state rõ ràng; không tự đưa Trang chủ vào để tránh section rỗng. |
+| FE-BR-016-06 | Frontend chỉ mở một section cấp cao tại một thời điểm; khi mở page bằng URL, yêu thích hoặc Command Palette, section sở hữu page được mở tự động. |
+
 ### 24.5 Yêu cầu chức năng frontend v1.1
 
 | ID | Yêu cầu |
@@ -654,9 +666,10 @@ Menu chỉ là cơ chế khám phá. Việc không hiển thị menu không thay
 | FE-FR-009 | Tải trực tiếp mọi route đã đăng ký phải trả về application shell hợp lệ. |
 | FE-FR-010 | Giao diện dùng thuật ngữ Quản trị viên hệ thống; `PLATFORM_ADMIN` chỉ là mã tương thích kỹ thuật. |
 | FE-FR-011 | Trang chủ không hiển thị dải thông tin tĩnh về tên môi trường, phiên bản Core, loại database và mô hình deployment; thông tin vận hành chi tiết phải đặt tại capability quản trị phù hợp khi có nhu cầu. |
-| FE-FR-012 | Production Core chỉ hiển thị section Nghiệp vụ và module thực được đóng gói/bật; `approval-domain` cùng API `/api/v1/approvals` chỉ tồn tại khi chạy profile `demo` hoặc `test`. |
+| FE-FR-012 | Production Core hiển thị Trang chủ độc lập và section Nghiệp vụ với module thực được đóng gói/bật; `approval-domain` cùng API `/api/v1/approvals` chỉ tồn tại khi chạy profile `demo` hoặc `test`. |
 | FE-FR-013 | Login sử dụng thông điệp “Giải pháp tối ưu hóa vận hành doanh nghiệp”, chữ trắng trên nền ESG; mô tả là “Quản trị vận hành, tài nguyên, phân quyền từ một trung tâm duy nhất.” |
 | FE-FR-014 | Access/refresh token phải cùng phạm vi lưu trữ; frontend dùng refresh-token rotation của backend khi access token hết hạn và xóa toàn bộ token khi refresh/logout thất bại. |
+| FE-FR-015 | Sidebar render `Trang chủ` độc lập cùng cấp với `Nghiệp vụ` và `Quản trị hệ thống`; `Nghiệp vụ` chỉ render menu module từ Navigation Registry và có empty state khi không có module khả dụng. |
 
 ### 24.6 Contract Navigation v1.1
 
@@ -666,6 +679,12 @@ Response công khai:
 {
   "revision": "string",
   "sections": [
+    {
+      "key": "home",
+      "label": "Trang chủ",
+      "sortOrder": 10,
+      "items": [{"key": "core.home", "type": "PAGE", "route": "/home"}]
+    },
     {
       "key": "business",
       "label": "Nghiệp vụ",
@@ -681,6 +700,7 @@ Response công khai:
 Quy tắc:
 
 - section key và item key là duy nhất toàn deployment;
+- `home` chỉ chứa page `core.home`; `core.home` không được nằm trong `business`;
 - route phải là đường dẫn nội bộ bắt đầu bằng `/`;
 - item `GROUP` không có route/view; item `PAGE` phải có route/view;
 - group không được chứa group;
@@ -693,7 +713,7 @@ Quy tắc:
 
 ### 24.7 Acceptance criteria v1.1
 
-- [x] Product Owner duyệt FE-BA-01 đến FE-BA-13 làm baseline.
+- [x] Product Owner duyệt FE-BA-01 đến FE-BA-16 làm baseline.
 - [x] Không còn Workspace switcher trên application shell.
 - [x] Sidebar được dựng từ Navigation Registry động.
 - [x] Quản trị hệ thống nằm cuối menu và không xuất hiện với người dùng thường.
@@ -708,6 +728,7 @@ Quy tắc:
 - [x] Trang chủ không còn dải thông tin tĩnh về môi trường, phiên bản Core, database và mô hình deployment.
 - [x] `approval-domain` được tách package/profile và không xuất hiện trong navigation/module/resource catalog của Production Core.
 - [x] Section Nghiệp vụ được giữ làm vùng mở rộng; trong demo, Đề nghị phê duyệt nằm dưới group Nghiệp vụ mẫu.
+- [x] Trang chủ là page cấp cao độc lập; section Nghiệp vụ chỉ chứa module nghiệp vụ và có empty state khi rỗng.
 - [x] Frontend dùng Next.js 16.3.1 App Router/standalone, bảng màu ESG và icon SVG theo module; không dùng vinext.
 - [x] Jobs/Outbox, bộ lọc module/resource/file, policy create và refresh-token được nối API thật; UI giả không có nguồn đã bị loại bỏ.
 - [x] Migration loại dữ liệu seed legacy khỏi Production và bộ đếm File/Service Account lấy từ database thật.
@@ -726,11 +747,12 @@ Quy tắc:
 | FE-FR-011 | Loại bỏ deployment environment summary strip khỏi Trang chủ | Frontend source guard test và Production visual smoke test |
 | FE-BA-14, FE-BR-014-01–06, FE-FR-012 | Profile-gated demo backend + business section/group + lazy frontend chunk + metadata cleanup | Profile test, navigation test, Production API/menu negative smoke test |
 | FE-BA-15, FE-FR-013–014 | ESG design tokens + semantic SVG registry + session rotation + V18 data hygiene + API gap matrix | Next build/test, dependency audit, backend integration và Production smoke test |
+| FE-BA-16, FE-BR-016-01–06, FE-FR-015 | Home adapter dành riêng + section accordion + business-only module registry | Registry invariant test, Navigation API order test và frontend source/render test |
 
 ## 25. Phê duyệt thay đổi v1.1
 
 | Vai trò | Quyết định | Ngày |
 |---|---|---|
-| Product Owner / Project Sponsor | Approved FE-BA-01 đến FE-BA-15 | 2026-08-17 |
+| Product Owner / Project Sponsor | Approved FE-BA-01 đến FE-BA-16 | 2026-08-23 |
 | Technical Lead | Pending release verification | |
 | Security Approver | Pending release verification | |

@@ -21,12 +21,23 @@ Registry fail startup khi có duplicate key, namespace module sai, section/paren
 
 | Key | Sort order | Đối tượng |
 |---|---:|---|
+| `home` | 10 | Mọi người dùng; adapter kỹ thuật cho page Trang chủ cấp cao |
 | `business` | 20 | Người dùng nghiệp vụ và System Administrator |
 | `system-administration` | 90 | `ROLE_PLATFORM_ADMIN` |
 
-Section nghiệp vụ được đặt trước. Quản trị hệ thống luôn ở cuối sidebar. Không tạo một section/Workspace riêng cho từng module chỉ để chứa một vài page.
+Frontend render `core.home` trong adapter `home` thành một page cấp cao, cùng cấp hiển thị với hai section Nghiệp vụ và Quản trị hệ thống. `home` không được dùng làm vùng mở rộng và không hiển thị thêm một nhãn section bao quanh Trang chủ. Quản trị hệ thống luôn ở cuối sidebar. Không tạo một section/Workspace riêng cho từng module chỉ để chứa một vài page.
 
-Section `business` là vùng mở rộng chuẩn chờ sẵn cho toàn bộ nghiệp vụ khách hàng. Module đăng ký group/page theo domain của mình trong section này; không đưa page nghiệp vụ vào `system-administration`. Group rỗng bị loại khỏi manifest, vì vậy Production vẫn có vùng Nghiệp vụ và Trang chủ nhưng không hiển thị menu mẫu.
+Section `business` là vùng mở rộng chuẩn chờ sẵn cho toàn bộ nghiệp vụ khách hàng. Module đăng ký group/page theo domain của mình trong section này; không đưa Trang chủ hoặc page nghiệp vụ vào `system-administration`. Group rỗng bị loại khỏi manifest; riêng section Nghiệp vụ vẫn tồn tại và frontend hiển thị empty state nếu tài khoản chưa có module khả dụng.
+
+```text
+Trang chủ
+Nghiệp vụ
+├── Marketing & Doanh thu
+│   └── Hiệu quả kinh doanh
+└── [Module nghiệp vụ khác]
+Quản trị hệ thống
+└── [Capability quản trị theo quyền]
+```
 
 ## Tách module demo/test
 
@@ -129,11 +140,11 @@ Authorization: Bearer <access-token>
   "revision": "a1b2c3d4e5f6",
   "sections": [
     {
-      "key": "business",
-      "label": "Nghiệp vụ",
-      "labelKey": "navigation.section.business",
-      "icon": "▦",
-      "sortOrder": 20,
+      "key": "home",
+      "label": "Trang chủ",
+      "labelKey": "navigation.section.home",
+      "icon": "home",
+      "sortOrder": 10,
       "items": [
         {
           "key": "core.home",
@@ -147,6 +158,14 @@ Authorization: Bearer <access-token>
           "keywords": ["trang chủ", "tổng quan"]
         }
       ]
+    },
+    {
+      "key": "business",
+      "label": "Nghiệp vụ",
+      "labelKey": "navigation.section.business",
+      "icon": "apps",
+      "sortOrder": 20,
+      "items": []
     }
   ],
   "favoriteKeys": [],
@@ -177,6 +196,7 @@ Backend loại key không còn hiển thị, giới hạn 20 favorite và 10 rec
 - Số lượng nhiệm vụ là dữ liệu hiển thị; không dùng số lượng bằng `0` để thu hồi capability hoặc làm menu thay đổi liên tục.
 - Module `DISABLED` không đóng góp menu.
 - Frontend không có fallback menu hard-code và không suy diễn quyền từ role code.
+- Registry dành riêng adapter `home` cho `core.home`; module nghiệp vụ chỉ đăng ký trong `business`.
 - Page chỉ được mở nếu xuất hiện trong manifest hiệu lực của phiên hiện tại.
 - Route không khớp page nào trong manifest được thay thế bằng route page hợp lệ đầu tiên; endpoint đích vẫn tự authorize.
 

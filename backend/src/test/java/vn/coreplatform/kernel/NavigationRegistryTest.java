@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 class NavigationRegistryTest {
   @Test void validatesAndOrdersSectionManifest() {
     var validated = NavigationRegistry.validate(List.of(contributor("kernel", List.of(
-        workspace("business"), workspace("system-administration")), List.of(
-        page("core.home", "business", "", "home", 10),
+        workspace("home"), workspace("business"), workspace("system-administration")), List.of(
+        page("core.home", "home", "", "home", 10),
         group("core.runtime", "system-administration", 20),
         page("core.modules", "system-administration", "core.runtime", "modules", 21)))));
-    assertThat(validated.workspaces()).extracting(x -> x.descriptor().key()).containsExactly("business", "system-administration");
+    assertThat(validated.workspaces()).extracting(x -> x.descriptor().key()).containsExactly("home", "business", "system-administration");
     assertThat(validated.items()).hasSize(3);
   }
 
@@ -30,13 +30,25 @@ class NavigationRegistryTest {
 
   @Test void rejectsMissingParentAndUnsafeRoute() {
     var missing = List.of(contributor("kernel", List.of(workspace("business")),
-        List.of(page("core.home", "business", "core.missing", "home", 10))));
+        List.of(page("core.dashboard", "business", "core.missing", "dashboard", 10))));
     assertThatThrownBy(() -> NavigationRegistry.validate(missing)).hasMessageContaining("parent không tồn tại");
 
-    var unsafe = new NavigationItemDescriptor("core.home", "business", "", "Home", "nav.home", "⌂",
+    var unsafe = new NavigationItemDescriptor("core.dashboard", "business", "", "Dashboard", "nav.dashboard", "⌂",
         "home", "https://outside.example", 10, "", "", "", List.of());
     assertThatThrownBy(() -> NavigationRegistry.validate(List.of(contributor("kernel", List.of(workspace("business")), List.of(unsafe)))))
         .hasMessageContaining("application route nội bộ");
+  }
+
+  @Test void reservesHomeAsAStandaloneTopLevelDestination() {
+    var nestedBusinessHome = List.of(contributor("kernel", List.of(workspace("business")),
+        List.of(page("core.home", "business", "", "home", 10))));
+    assertThatThrownBy(() -> NavigationRegistry.validate(nestedBusinessHome))
+        .hasMessageContaining("core.home phải tách khỏi section nghiệp vụ");
+
+    var foreignHomeItem = List.of(contributor("kernel", List.of(workspace("home")),
+        List.of(page("core.dashboard", "home", "", "dashboard", 10))));
+    assertThatThrownBy(() -> NavigationRegistry.validate(foreignHomeItem))
+        .hasMessageContaining("Section home chỉ được chứa page core.home");
   }
 
   @Test void enforcesThreeLevelTreeAndAssignmentVisibilityContract() {
@@ -70,7 +82,8 @@ class NavigationRegistryTest {
     };
   }
   private static NavigationWorkspaceDescriptor workspace(String key) {
-    return new NavigationWorkspaceDescriptor(key,key,"section."+key,"W",key.equals("system-administration")?"ADMIN":"BUSINESS",key.equals("business")?10:90,"");
+    var order = key.equals("home") ? 10 : key.equals("business") ? 20 : 90;
+    return new NavigationWorkspaceDescriptor(key,key,"section."+key,"W",key.equals("system-administration")?"ADMIN":"BUSINESS",order,"");
   }
   private static NavigationItemDescriptor page(String key,String workspace,String parent,String view,int order) {
     return new NavigationItemDescriptor(key,workspace,parent,key,"nav."+view,"P",view,"/"+workspace+"/"+view,order,"","","",List.of());

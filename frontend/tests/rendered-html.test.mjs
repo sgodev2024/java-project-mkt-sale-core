@@ -53,6 +53,16 @@ test("personal task navigation is not hard-coded in the application shell", asyn
   assert.match(source, /api\/v1\/navigation\/me/);
 });
 
+test("home is a standalone top-level entry and business owns module navigation", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(source, /if\(section\.key==="home"\).*renderPageButton\(home\)/s);
+  assert.match(source, /className={`nav-section-trigger/);
+  assert.match(source, /rootItems\.length===0.*Chưa có module được cấp quyền/s);
+  assert.match(styles, /\.nav-section-trigger\s*\{/);
+  assert.match(styles, /\.nav-section-children\s*\{/);
+});
+
 test("home page does not render the deployment environment summary strip", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");

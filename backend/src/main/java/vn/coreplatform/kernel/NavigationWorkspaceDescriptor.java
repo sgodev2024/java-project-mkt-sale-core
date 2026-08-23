@@ -2,7 +2,7 @@ package vn.coreplatform.kernel;
 
 import java.util.regex.Pattern;
 
-/** Workspace cấp cao; ADMIN tách hẳn control-plane khỏi không gian nghiệp vụ. */
+/** Adapter nội bộ cho section điều hướng cấp cao của application shell hợp nhất. */
 public record NavigationWorkspaceDescriptor(
     String key,
     String label,

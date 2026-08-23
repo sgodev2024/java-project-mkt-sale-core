@@ -62,6 +62,10 @@ public class NavigationRegistry implements InitializingBean {
       var item = registration.descriptor();
       if (!workspaceByKey.containsKey(item.workspaceKey()))
         throw new IllegalStateException("Navigation item " + item.key() + " dùng workspace chưa đăng ký: " + item.workspaceKey());
+      if ("home".equals(item.workspaceKey()) && (!"core.home".equals(item.key()) || item.group() || !item.parentKey().isBlank()))
+        throw new IllegalStateException("Section home chỉ được chứa page core.home cấp cao nhất: " + item.key());
+      if ("core.home".equals(item.key()) && !"home".equals(item.workspaceKey()))
+        throw new IllegalStateException("core.home phải tách khỏi section nghiệp vụ và thuộc section home");
       if (!item.parentKey().isBlank()) {
         var parent = itemByKey.get(item.parentKey());
         if (parent == null) throw new IllegalStateException("Navigation parent không tồn tại: " + item.parentKey());
