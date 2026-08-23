@@ -82,10 +82,11 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `d452737f2023d0978364f63af8457ae086db9954` (2026-08-23). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `b29e20476722182dee80a72e7d36956b0f2d98e9` (2026-08-23). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-23 | [`b29e204`](https://github.com/sgodev2024/java-core/commit/b29e20476722182dee80a72e7d36956b0f2d98e9) | Document CRM green interface release | sgodev2024 | 1 |
 | 2026-08-23 | [`d452737`](https://github.com/sgodev2024/java-core/commit/d452737f2023d0978364f63af8457ae086db9954) | Apply green transformation interface palette | sgodev2024 | 5 |
 | 2026-08-23 | [`3335faf`](https://github.com/sgodev2024/java-core/commit/3335fafa4d50499021d3b2b54e498c2bb3beb6c6) | Verify standalone home navigation in smoke test | sgodev2024 | 2 |
 | 2026-08-23 | [`cff4bee`](https://github.com/sgodev2024/java-core/commit/cff4beef2ecd864cb6afd3a844c60e6c2fde8894) | Separate home from business navigation | sgodev2024 | 13 |
@@ -98,6 +99,14 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-23 — Document CRM green interface release
+
+- Commit: [`b29e20476722182dee80a72e7d36956b0f2d98e9`](https://github.com/sgodev2024/java-core/commit/b29e20476722182dee80a72e7d36956b0f2d98e9)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `docs/06-deployment-runbook-test-v1.0.md`
 
 ### 2026-08-23 — Apply green transformation interface palette
 
