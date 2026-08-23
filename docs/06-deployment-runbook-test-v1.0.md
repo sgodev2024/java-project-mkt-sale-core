@@ -6,8 +6,8 @@
 - Trạng thái: Đã triển khai và smoke test; chưa phải production khách hàng
 - Repository: `git@github.com:sgodev2024/java-project-mkt-sale-core.git`
 - Core baseline: `core-v1.1.0-project-baseline` (`199411e`)
-- Release test: `v0.1.3-test`
-- Runtime commit: `64265314df02`
+- Release test: `v0.1.4-test`
+- Runtime commit: `8d1592117fd3`
 
 ## 1. Điểm triển khai
 
@@ -118,6 +118,20 @@ Không chạy chế độ seed với dữ liệu khách hàng thật và không 
 | Production Core | Không triển khai lại; môi trường Production Core không thay đổi |
 
 Tại thời điểm kiểm tra, phân vùng `/` sử dụng 85%, còn khoảng 12 GB. Phải đặt cảnh báo dung lượng và kiểm tra trước mỗi build/release; không tự động xóa volume hoặc image chưa xác minh.
+
+### 6.2. Kết quả phát hành giao diện xanh ngày 2026-08-23
+
+| Gate | Kết quả |
+|---|---|
+| Release | `v0.1.4-test`; runtime `8d1592117fd3` |
+| Giao diện | Shell và trang đăng nhập dùng bộ token màu xanh chuyển đổi; Next.js chuẩn, không dùng Vinext |
+| Cấu trúc điều hướng | Giữ đúng `Trang chủ` → `Nghiệp vụ` → `Quản trị hệ thống`; Trang chủ không nằm trong Nghiệp vụ |
+| Nghiệp vụ | Chỉ hiển thị module đang bật và được cấp quyền; section vẫn hiển thị trạng thái trống khi không có module |
+| Frontend quality | Next.js production build đạt; 7/7 test đạt; lint 0 lỗi (còn 5 cảnh báo React Hook đã biết) |
+| Runtime smoke test | Đăng nhập, Navigation Registry, Revenue Dashboard và logout đều đạt |
+| Container health | PostgreSQL, backend và frontend đều `healthy` |
+| Public domain | `https://crm-mkt-sale.sgodata.com` trả HTTP 200 |
+| Production Core | Không triển khai lại; chỉ phát hành baseline source `core-v1.1.1-project-baseline` |
 
 ## 7. Backup và restore drill
 
