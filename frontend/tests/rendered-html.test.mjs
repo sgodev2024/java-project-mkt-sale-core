@@ -78,6 +78,15 @@ test("approval demo is isolated from the production application shell", async ()
   assert.match(demo, /api\/v1\/approvals/);
 });
 
+test("green transformation background tokens are applied to the shell and authentication", async () => {
+  const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(styles, /--transition-green-950:\s*#062f24/i);
+  assert.match(styles, /--transition-green-600:\s*#238558/i);
+  assert.match(styles, /body\s*\{[^}]*linear-gradient\(145deg,var\(--transition-green-50\),var\(--canvas\)\)/s);
+  assert.match(styles, /\.main-area\s*\{[^}]*rgba\(225,240,229,\.62\)/s);
+  assert.match(styles, /\.auth-page\s*\{[^}]*var\(--transition-green-100\)/s);
+});
+
 test("ESG login copy, semantic icons and real operations APIs are enforced", async () => {
   const shell = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");

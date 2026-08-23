@@ -31,6 +31,7 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 - Section `system-administration` nằm cuối và chỉ hiện cho `ROLE_PLATFORM_ADMIN`; label người dùng là **Quản trị viên hệ thống**.
 - `core.home` được tách vào adapter `home` và render thành page cấp cao, đứng cùng cấp với `Nghiệp vụ` và `Quản trị hệ thống`; section `business` chỉ chứa menu do module nghiệp vụ đóng góp.
 - Registry fail startup nếu module chèn item vào `home` hoặc nếu `core.home` bị đặt lại trong `business`; section Nghiệp vụ rỗng vẫn hiển thị empty state thay vì chứa Trang chủ làm fallback.
+- Nền application shell và đăng nhập dùng bộ design token `transition-green-*`: canvas xanh nhạt `#e7f2ea`, xanh chuyển đổi `#238558` và xanh rừng `#062f24`; focus ring, topbar và main canvas dùng cùng hệ màu để Core và dự án không lệch nhận diện.
 - `NavigationItemDescriptor.visibilityMode=ASSIGNMENT` luôn qua `NavigationVisibilityPolicy` và exact-policy PDP, kể cả System Administrator; wildcard `*/*` không được xem là nhiệm vụ được giao (FE-BA-13).
 - Core shell không hard-code `Công việc của tôi`. Chỉ module có view/API/PEP hộp việc thật mới đăng ký item `ASSIGNMENT`; tài khoản quản trị muốn xử lý nghiệp vụ phải có capability assignment chính xác.
 - Capability assignment giữ menu ổn định khi hộp việc đang rỗng; view hiển thị empty state, badge không tham gia authorization.
