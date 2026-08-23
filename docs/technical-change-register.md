@@ -81,10 +81,11 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `196f3281995281639f2e782094411a3ab812f693` (2026-08-18). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `cff4beef2ecd864cb6afd3a844c60e6c2fde8894` (2026-08-23). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-23 | [`cff4bee`](https://github.com/sgodev2024/java-core/commit/cff4beef2ecd864cb6afd3a844c60e6c2fde8894) | Separate home from business navigation | sgodev2024 | 13 |
 | 2026-08-18 | [`196f328`](https://github.com/sgodev2024/java-core/commit/196f3281995281639f2e782094411a3ab812f693) | Record CORS hotfix deployment | sgodev2024 | 1 |
 | 2026-08-18 | [`f059f43`](https://github.com/sgodev2024/java-core/commit/f059f43fd4f46bb3f673fcb4437ebc87cc405f85) | Document browser origin release gate | sgodev2024 | 2 |
 | 2026-08-18 | [`68bf081`](https://github.com/sgodev2024/java-core/commit/68bf0813f0c31b711449f779440df02b6b80262e) | Fix project domain CORS handling | sgodev2024 | 8 |
@@ -94,6 +95,26 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-23 — Separate home from business navigation
+
+- Commit: [`cff4beef2ecd864cb6afd3a844c60e6c2fde8894`](https://github.com/sgodev2024/java-core/commit/cff4beef2ecd864cb6afd3a844c60e6c2fde8894)
+- Tác giả: sgodev2024
+- Phạm vi file:
+
+- `M` `backend/src/main/java/vn/coreplatform/kernel/KernelModule.java`
+- `M` `backend/src/main/java/vn/coreplatform/kernel/NavigationRegistry.java`
+- `M` `backend/src/main/java/vn/coreplatform/kernel/NavigationWorkspaceDescriptor.java`
+- `M` `backend/src/main/java/vn/coreplatform/navigation/NavigationController.java`
+- `M` `backend/src/test/java/vn/coreplatform/kernel/NavigationApiTest.java`
+- `M` `backend/src/test/java/vn/coreplatform/kernel/NavigationRegistryTest.java`
+- `M` `core-platform-ba-requirements-v1.1.md`
+- `M` `docs/navigation-registry.md`
+- `M` `docs/technical-change-register.md`
+- `M` `frontend/README.md`
+- `M` `frontend/app/globals.css`
+- `M` `frontend/app/page.tsx`
+- `M` `frontend/tests/rendered-html.test.mjs`
 
 ### 2026-08-18 — Record CORS hotfix deployment
 
