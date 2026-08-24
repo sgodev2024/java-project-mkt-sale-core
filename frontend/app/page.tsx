@@ -91,7 +91,8 @@ async function apiRequest<T>(path:string, init:RequestInit = {}):Promise<T> {
     throw new ApiProblemError(problem.detail || "Thao tác không thành công.", problem.code);
   }
   if (response.status === 204) return undefined as T;
-  return response.json() as Promise<T>;
+  const body = await response.text();
+  return body ? JSON.parse(body) as T : undefined as T;
 }
 
 function LoginScreen({ onAuthenticated }: { onAuthenticated: (session: SessionData, remember: boolean) => void }) {
