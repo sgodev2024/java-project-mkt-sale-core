@@ -34,6 +34,6 @@ class BootstrapAdminInitializerTest {
 
     new BootstrapAdminInitializer(jdbc, encoder, environment, "Strong-Production-Secret-2026").run();
 
-    verify(jdbc).update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local'", "{argon2}hash");
+    verify(jdbc).update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local' and must_change_password=true", "{argon2}hash");
   }
 }

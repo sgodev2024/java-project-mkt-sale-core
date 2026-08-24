@@ -30,6 +30,6 @@ class BootstrapAdminInitializer implements CommandLineRunner {
     if (production && (bootstrapPassword.isBlank() || "Core@2026".equals(bootstrapPassword)))
       throw new IllegalStateException("Production yêu cầu CORE_BOOTSTRAP_ADMIN_PASSWORD mạnh và không được dùng giá trị demo");
     if (!bootstrapPassword.isBlank())
-      jdbc.update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local'", encoder.encode(bootstrapPassword));
+      jdbc.update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local' and must_change_password=true", encoder.encode(bootstrapPassword));
   }
 }

@@ -6,6 +6,10 @@ import { AppIcon } from "./components/app-icon";
 
 type View = "home" | "approvals" | "revenue-intelligence" | "modules" | "resources" | "users" | "organizations" | "access" | "activity" | "files" | "settings";
 type AuthStep = "login" | "mfa";
+
+class ApiProblemError extends Error {
+  constructor(message: string, readonly code?: string) { super(message); }
+}
 const API_URL = process.env.NEXT_PUBLIC_CORE_API_URL ?? "https://api.corejava.sgodata.com";
 const DemoApprovalWorkspace = dynamic(() => import("./demo/approval-workspace"), { ssr: false });
 const RevenueIntelligenceWorkspace = dynamic(() => import("./modules/revenue-intelligence"), { ssr: false });
@@ -84,7 +88,7 @@ async function apiRequest<T>(path:string, init:RequestInit = {}):Promise<T> {
   if (response.status === 401 && path !== "/api/v1/auth/refresh" && await refreshSession()) response = await request();
   if (!response.ok) {
     const problem = await response.json().catch(() => ({}));
-    throw new Error(problem.detail || "Thao tác không thành công.");
+    throw new ApiProblemError(problem.detail || "Thao tác không thành công.", problem.code);
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
@@ -167,6 +171,20 @@ function LoginScreen({ onAuthenticated }: { onAuthenticated: (session: SessionDa
       </div>
     </section>
   </div>;
+}
+
+function PasswordChangeScreen({ onChanged, onSignOut }: { onChanged: () => void; onSignOut: () => void }) {
+  const [currentPassword,setCurrentPassword]=useState("");
+  const [newPassword,setNewPassword]=useState("");
+  const [confirmation,setConfirmation]=useState("");
+  const [error,setError]=useState("");
+  const [loading,setLoading]=useState(false);
+  const submit=async(event:React.FormEvent)=>{event.preventDefault();setError("");
+    if(newPassword.length<12||!/[A-Za-z]/.test(newPassword)||!/[0-9]/.test(newPassword))return setError("Mật khẩu mới phải có ít nhất 12 ký tự, gồm cả chữ và số.");
+    if(newPassword!==confirmation)return setError("Mật khẩu xác nhận chưa khớp.");
+    setLoading(true);try{await apiRequest<void>("/api/v1/auth/change-password",{method:"POST",body:JSON.stringify({currentPassword,newPassword})});onChanged();}
+    catch(cause){setError(cause instanceof Error?cause.message:"Không thể đổi mật khẩu.");}finally{setLoading(false);}};
+  return <div className="auth-page"><section className="auth-brand-panel" aria-label="Bảo mật tài khoản"><div className="auth-brand"><div className="brand-mark large"><i/><i/><i/><i/></div><div><strong>Core</strong><span>Platform</span></div></div><div className="auth-message"><span className="auth-kicker">Account security</span><h1>Bảo vệ tài khoản quản trị</h1><p>Đổi mật khẩu khởi tạo trước khi truy cập dữ liệu và chức năng quản trị hệ thống.</p></div><div className="auth-trust"><div><StatusDot/><span>Phiên xác thực đã được bảo vệ</span></div><small>Mandatory password change</small></div></section><section className="auth-form-panel"><div className="auth-card"><div className="auth-heading"><span className="mfa-icon"><AppIcon name="lock" size={22}/></span><h2>Đổi mật khẩu bắt buộc</h2><p>Đây là lần đăng nhập đầu tiên hoặc mật khẩu vừa được quản trị viên đặt lại.</p></div><form onSubmit={submit}><label>Mật khẩu hiện tại<div className="password-field"><input autoFocus type="password" autoComplete="current-password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)}/><span>●●●</span></div></label><label>Mật khẩu mới<div className="password-field"><input type="password" autoComplete="new-password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/><span>●●●</span></div></label><label>Xác nhận mật khẩu mới<div className="password-field"><input type="password" autoComplete="new-password" value={confirmation} onChange={e=>setConfirmation(e.target.value)}/><span>●●●</span></div></label>{error&&<p className="auth-error" role="alert">{error}</p>}<button className="auth-submit" disabled={loading}>{loading?"Đang cập nhật...":"Đổi mật khẩu và tiếp tục"}<span>→</span></button><button type="button" className="auth-back password-signout" onClick={onSignOut}>Đăng xuất và dùng tài khoản khác</button></form></div></section></div>;
 }
 
 function StatusDot({ tone = "teal" }: { tone?: string }) {
@@ -426,7 +444,7 @@ export default function Home() {
   const [authenticated,setAuthenticated]=useState(false);const [authReady,setAuthReady]=useState(false);const [user,setUser]=useState<UserInfo|null>(null);
   const [navigation,setNavigation]=useState<NavigationModel|null>(null);const [expandedSection,setExpandedSection]=useState("");const [expandedGroup,setExpandedGroup]=useState("");const [view,setView]=useState<View>("home");
   const [sidebarOpen,setSidebarOpen]=useState(false);const [commandOpen,setCommandOpen]=useState(false);const [commandQuery,setCommandQuery]=useState("");const [notificationsOpen,setNotificationsOpen]=useState(false);const [profileOpen,setProfileOpen]=useState(false);const [logoutOpen,setLogoutOpen]=useState(false);
-  const [apiOnline,setApiOnline]=useState(false);const [data,setData]=useState<BootstrapData|null>(null);const [operationError,setOperationError]=useState("");
+  const [apiOnline,setApiOnline]=useState(false);const [data,setData]=useState<BootstrapData|null>(null);const [operationError,setOperationError]=useState("");const [passwordChangeRequired,setPasswordChangeRequired]=useState(false);
   const authHeaders=()=>({Authorization:`Bearer ${storedToken()}`});
 
   useEffect(()=>{const existing=storedToken();if(!existing){setAuthReady(true);return;}void apiRequest<UserInfo>("/api/v1/auth/me").then(account=>{setUser(account);setAuthenticated(true);setApiOnline(true);}).catch(()=>clearSession()).finally(()=>setAuthReady(true));},[]);
@@ -435,7 +453,7 @@ export default function Home() {
   const loadNavigation=async()=>{const model=await apiRequest<NavigationModel>("/api/v1/navigation/me");setNavigation(model);selectRoute(model);return model;};
   const refresh=async()=>setData(await apiRequest<BootstrapData>("/api/v1/control-plane/bootstrap"));
 
-  useEffect(()=>{if(!authenticated)return;void(async()=>{try{const [me,model]=await Promise.all([apiRequest<UserInfo>("/api/v1/auth/me"),loadNavigation()]);setUser(me);if(model.sections.some(section=>section.key==="system-administration"))await refresh();setApiOnline(true);setOperationError("");}catch{setApiOnline(false);setOperationError("Không thể khởi tạo ứng dụng. Vui lòng đăng nhập lại hoặc kiểm tra backend.");}})();},[authenticated]);
+  useEffect(()=>{if(!authenticated||passwordChangeRequired)return;void(async()=>{try{const [me,model]=await Promise.all([apiRequest<UserInfo>("/api/v1/auth/me"),loadNavigation()]);setUser(me);if(model.sections.some(section=>section.key==="system-administration"))await refresh();setApiOnline(true);setOperationError("");}catch(error){if(error instanceof ApiProblemError&&error.code==="PASSWORD_CHANGE_REQUIRED"){setPasswordChangeRequired(true);setNavigation(null);return;}setApiOnline(false);setOperationError("Không thể khởi tạo ứng dụng. Vui lòng đăng nhập lại hoặc kiểm tra backend.");}})();},[authenticated,passwordChangeRequired]);
   useEffect(()=>{const handler=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();setCommandOpen(true);}if(event.key==="Escape"){setCommandOpen(false);setNotificationsOpen(false);setProfileOpen(false);setLogoutOpen(false);setSidebarOpen(false);}};window.addEventListener("keydown",handler);return()=>window.removeEventListener("keydown",handler);},[]);
   useEffect(()=>{if(!navigation)return;const handler=()=>selectRoute(navigation);window.addEventListener("popstate",handler);return()=>window.removeEventListener("popstate",handler);},[navigation]);
 
@@ -453,13 +471,14 @@ export default function Home() {
   const uploadFile=async(file:File)=>{setOperationError("");const form=new FormData();form.append("file",file);const response=await fetch(`${API_URL}/api/v1/files?classification=INTERNAL`,{method:"POST",headers:authHeaders(),body:form});if(!response.ok){const problem=await response.json().catch(()=>({}));setOperationError(problem.detail||"Upload thất bại");return;}await refresh();};
   const downloadFile=async(item:FileItem)=>{const response=await fetch(`${API_URL}/api/v1/files/${item.id}/content`,{headers:authHeaders()});if(!response.ok){const problem=await response.json().catch(()=>({}));setOperationError(problem.detail||"Nội dung file chưa sẵn sàng");return;}const url=URL.createObjectURL(await response.blob());const anchor=document.createElement("a");anchor.href=url;anchor.download=item.name;anchor.click();URL.revokeObjectURL(url);};
   const signIn=(session:SessionData,remember:boolean)=>{persistSession(session,remember);setUser(session.user);setNavigation(null);setApiOnline(true);setAuthenticated(true);};
-  const signOut=async()=>{const accessToken=storedToken();if(accessToken)await fetch(`${API_URL}/api/v1/auth/logout`,{method:"POST",headers:{Authorization:`Bearer ${accessToken}`}}).catch(()=>undefined);clearSession();window.history.replaceState(null,"","/");setAuthenticated(false);setNavigation(null);setData(null);setUser(null);setLogoutOpen(false);setProfileOpen(false);setView("home");};
+  const signOut=async()=>{const accessToken=storedToken();if(accessToken)await fetch(`${API_URL}/api/v1/auth/logout`,{method:"POST",headers:{Authorization:`Bearer ${accessToken}`}}).catch(()=>undefined);clearSession();window.history.replaceState(null,"","/");setAuthenticated(false);setPasswordChangeRequired(false);setNavigation(null);setData(null);setUser(null);setLogoutOpen(false);setProfileOpen(false);setView("home");};
   const initials=(user?.displayName||user?.email||"CP").split(/\s+/).map(part=>part[0]).join("").slice(0,2).toUpperCase();const settingsItem=allPages.find(entry=>entry.item.viewKey==="settings")?.item;const businessSection=sections.find(section=>section.key==="business");
   const renderPageButton=(item:NavigationItem,compact=false)=><div className={`nav-entry ${compact?"compact":""}`} key={item.key}><button className={view===item.viewKey?"active":""} onClick={()=>openItem(item)}><span className="nav-icon"><AppIcon name={item.icon} size={17}/></span><span>{item.label}</span></button><button className={`favorite-toggle ${navigation?.favoriteKeys.includes(item.key)?"selected":""}`} aria-label={`${navigation?.favoriteKeys.includes(item.key)?"Bỏ":"Thêm"} yêu thích ${item.label}`} onClick={()=>toggleFavorite(item)}><AppIcon name="star" size={14}/></button></div>;
   const renderSection=(section:NavigationSection)=>{const rootItems=section.items.filter(item=>!item.parentKey);if(section.key==="home"){const home=rootItems.find(item=>item.type==="PAGE");return home?renderPageButton(home):null;}const open=expandedSection===section.key;return <section className={`nav-section ${open?"open":""}`} key={section.key}><button className={`nav-section-trigger ${currentSection?.key===section.key?"active":""}`} aria-expanded={open} onClick={()=>setExpandedSection(open?"":section.key)}><span className="nav-icon"><AppIcon name={section.icon} size={17}/></span><span>{section.label}</span><b><AppIcon name="chevron-down" size={13}/></b></button>{open&&<div className="nav-section-children">{rootItems.map(item=>item.type==="GROUP"?<div className={`nav-group ${expandedGroup===item.key?"open":""}`} key={item.key}><button className="nav-group-trigger" aria-expanded={expandedGroup===item.key} onClick={()=>setExpandedGroup(expandedGroup===item.key?"":item.key)}><span className="nav-icon"><AppIcon name={item.icon} size={17}/></span><span>{item.label}</span><b><AppIcon name="chevron-down" size={13}/></b></button>{expandedGroup===item.key&&<div className="nav-children">{section.items.filter(child=>child.parentKey===item.key&&child.type==="PAGE").map(child=>renderPageButton(child))}</div>}</div>:renderPageButton(item))}{rootItems.length===0&&<span className="nav-section-empty">Chưa có module được cấp quyền</span>}</div>}</section>;};
 
   if(!authReady)return <div className="auth-loading" aria-label="Đang kiểm tra phiên đăng nhập"><span/></div>;
   if(!authenticated)return <LoginScreen onAuthenticated={signIn}/>;
+  if(passwordChangeRequired)return <PasswordChangeScreen onChanged={()=>{setPasswordChangeRequired(false);setNavigation(null);}} onSignOut={()=>void signOut()}/>;
   if(!navigation)return <div className="auth-loading" aria-label="Đang tải Navigation Registry"><span/></div>;
 
   return <div className="app-shell">
