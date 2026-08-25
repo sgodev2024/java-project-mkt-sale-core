@@ -82,10 +82,13 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `b29e20476722182dee80a72e7d36956b0f2d98e9` (2026-08-23). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `f81f3eed594dda0de75270b3acd725c153aec361` (2026-08-25). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-25 | [`f81f3ee`](https://github.com/sgodev2024/java-core/commit/f81f3eed594dda0de75270b3acd725c153aec361) | fix: preserve production password and refresh local bootstrap | SGO Viet Nam | 2 |
+| 2026-08-24 | [`c5354ba`](https://github.com/sgodev2024/java-core/commit/c5354ba992c485defddefbe34c58e375185a9c67) | fix: accept empty successful API responses | SGO Viet Nam | 1 |
+| 2026-08-24 | [`d633a33`](https://github.com/sgodev2024/java-core/commit/d633a33d5876f074f6f447e401cefb064a3fea2c) | fix: handle mandatory password change without infinite loading | SGO Viet Nam | 4 |
 | 2026-08-23 | [`b29e204`](https://github.com/sgodev2024/java-core/commit/b29e20476722182dee80a72e7d36956b0f2d98e9) | Document CRM green interface release | sgodev2024 | 1 |
 | 2026-08-23 | [`d452737`](https://github.com/sgodev2024/java-core/commit/d452737f2023d0978364f63af8457ae086db9954) | Apply green transformation interface palette | sgodev2024 | 5 |
 | 2026-08-23 | [`3335faf`](https://github.com/sgodev2024/java-core/commit/3335fafa4d50499021d3b2b54e498c2bb3beb6c6) | Verify standalone home navigation in smoke test | sgodev2024 | 2 |
@@ -99,6 +102,34 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-25 — fix: preserve production password and refresh local bootstrap
+
+- Commit: [`f81f3eed594dda0de75270b3acd725c153aec361`](https://github.com/sgodev2024/java-core/commit/f81f3eed594dda0de75270b3acd725c153aec361)
+- Tác giả: SGO Viet Nam
+- Phạm vi file:
+
+- `M` `backend/src/main/java/vn/coreplatform/identity/BootstrapAdminInitializer.java`
+- `M` `backend/src/test/java/vn/coreplatform/identity/BootstrapAdminInitializerTest.java`
+
+### 2026-08-24 — fix: accept empty successful API responses
+
+- Commit: [`c5354ba992c485defddefbe34c58e375185a9c67`](https://github.com/sgodev2024/java-core/commit/c5354ba992c485defddefbe34c58e375185a9c67)
+- Tác giả: SGO Viet Nam
+- Phạm vi file:
+
+- `M` `frontend/app/page.tsx`
+
+### 2026-08-24 — fix: handle mandatory password change without infinite loading
+
+- Commit: [`d633a33d5876f074f6f447e401cefb064a3fea2c`](https://github.com/sgodev2024/java-core/commit/d633a33d5876f074f6f447e401cefb064a3fea2c)
+- Tác giả: SGO Viet Nam
+- Phạm vi file:
+
+- `M` `backend/src/main/java/vn/coreplatform/identity/BootstrapAdminInitializer.java`
+- `M` `backend/src/test/java/vn/coreplatform/identity/BootstrapAdminInitializerTest.java`
+- `M` `frontend/app/globals.css`
+- `M` `frontend/app/page.tsx`
 
 ### 2026-08-23 — Document CRM green interface release
 
