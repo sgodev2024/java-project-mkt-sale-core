@@ -36,4 +36,16 @@ class BootstrapAdminInitializerTest {
 
     verify(jdbc).update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local' and must_change_password=true", "{argon2}hash");
   }
+
+  @Test void nonProductionRefreshesTheKnownLocalAdminPassword() throws Exception {
+    var jdbc = mock(JdbcTemplate.class);
+    var encoder = mock(PasswordEncoder.class);
+    var environment = new MockEnvironment();
+    environment.setActiveProfiles("test");
+    when(encoder.encode("Local-Test-Secret-2026")).thenReturn("{argon2}local-hash");
+
+    new BootstrapAdminInitializer(jdbc, encoder, environment, "Local-Test-Secret-2026").run();
+
+    verify(jdbc).update("update identity.account set password_hash=?,password_algo='ARGON2ID',password_changed_at=now() where email='admin@core.local'", "{argon2}local-hash");
+  }
 }
