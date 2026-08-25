@@ -82,10 +82,11 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 ## 5. Lịch sử thay đổi tự động
 
 <!-- AUTO-GENERATED:START -->
-> Sinh tự động từ Git. Mốc mã gần nhất: `f81f3eed594dda0de75270b3acd725c153aec361` (2026-08-25). Không sửa trực tiếp phần này.
+> Sinh tự động từ Git. Mốc mã gần nhất: `9b631923ee7f497694d489fe4499f9b5c50cd3e2` (2026-08-25). Không sửa trực tiếp phần này.
 
 | Ngày | Commit | Nội dung | Tác giả | Số file |
 |---|---|---|---|---:|
+| 2026-08-25 | [`9b63192`](https://github.com/sgodev2024/java-core/commit/9b631923ee7f497694d489fe4499f9b5c50cd3e2) | build: avoid excessive Maven offline dependency resolution | SGO Viet Nam | 1 |
 | 2026-08-25 | [`f81f3ee`](https://github.com/sgodev2024/java-core/commit/f81f3eed594dda0de75270b3acd725c153aec361) | fix: preserve production password and refresh local bootstrap | SGO Viet Nam | 2 |
 | 2026-08-24 | [`c5354ba`](https://github.com/sgodev2024/java-core/commit/c5354ba992c485defddefbe34c58e375185a9c67) | fix: accept empty successful API responses | SGO Viet Nam | 1 |
 | 2026-08-24 | [`d633a33`](https://github.com/sgodev2024/java-core/commit/d633a33d5876f074f6f447e401cefb064a3fea2c) | fix: handle mandatory password change without infinite loading | SGO Viet Nam | 4 |
@@ -102,6 +103,14 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 | 2026-08-18 | [`0fc5048`](https://github.com/sgodev2024/java-core/commit/0fc50485b26fd3a00e5113c7d194064cf37e8018) | Initialize Revenue Intelligence from Core baseline | sgodev2024 | 200 |
 
 ## Chi tiết file theo commit
+
+### 2026-08-25 — build: avoid excessive Maven offline dependency resolution
+
+- Commit: [`9b631923ee7f497694d489fe4499f9b5c50cd3e2`](https://github.com/sgodev2024/java-core/commit/9b631923ee7f497694d489fe4499f9b5c50cd3e2)
+- Tác giả: SGO Viet Nam
+- Phạm vi file:
+
+- `M` `backend/Dockerfile`
 
 ### 2026-08-25 — fix: preserve production password and refresh local bootstrap
 
