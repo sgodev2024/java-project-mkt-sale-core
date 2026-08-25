@@ -71,6 +71,17 @@ Phần quyết định kỹ thuật được cập nhật có chủ đích trong
 - Frontend approval demo được tách thành lazy chunk `app/demo/approval-workspace.tsx`; shell chỉ tải khi backend manifest cho phép view `approvals`.
 - Tài liệu BA chuẩn là `core-platform-ba-requirements-v1.1.md`; v1.0 chỉ còn giá trị lịch sử.
 
+### 3.5 Ổn định đăng nhập và phát hành CRM ngày 2026-08-25
+
+- Đồng bộ hai bản sửa Core vào dự án CRM: xử lý luồng bắt buộc đổi mật khẩu không gây loading vô hạn và chấp nhận response thành công không có JSON body.
+- Bootstrap admin không ghi đè mật khẩu đã đổi ở profile `production`; profile local/test/demo vẫn làm mới mật khẩu bootstrap để môi trường lập trình có credential xác định.
+- Docker backend bỏ `dependency:go-offline` vì lệnh này phân giải dư thừa toàn bộ BOM Google Cloud; build Maven dùng BuildKit cache tại `/root/.m2` và chạy package trực tiếp.
+- Backup trước phát hành: `/home/ubuntu/backups/crm-mkt-sale/crm_mkt_sale_pre_core_sync_20260825.dump`; catalog đã được kiểm tra bằng `pg_restore -l`.
+- Runtime CRM triển khai từ commit `9b63192`; backend và frontend cùng dùng tag image `9b63192`.
+- Flyway xác nhận schema ở version 20, đủ 20 migration và không cần migration mới.
+- Release gate đạt: frontend/backend container `healthy`; readiness nội bộ và qua domain đều HTTP 200; login và `GET /api/v1/auth/me` qua `https://crm-mkt-sale.sgodata.com` đều HTTP 200.
+- Image runtime cũ `8d1592117fd3` và database backup được giữ làm điểm rollback.
+
 ## 4. Quy tắc cập nhật tài liệu
 
 1. Thay đổi kiến trúc, security, API contract, migration hoặc vận hành phải cập nhật phần quyết định ở trên trong cùng pull request.
